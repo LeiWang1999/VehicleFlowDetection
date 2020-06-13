@@ -27,15 +27,15 @@ The accuracy of detecting the VisDrone data set is relatively high right now
 
 #### PyQT5 interactive interface
 
-![GUI](http://leiblog.wang/static/image/2020/6/QQ20200613-215038-HD.gif)
+![GUI](http://leiblog.wang/static/image/2020/6/1.jpg)
 
 #### Detection：
 
-![detecting](http://leiblog.wang/static/image/2020/6/detect.gif)
+![detecting](http://leiblog.wang/static/image/2020/6/detect.png)
 
 #### Count：
 
-![counting](http://leiblog.wang/static/image/2020/6/counting.gif)
+![counting](http://leiblog.wang/static/image/2020/6/count.png)
 
 ### Resouces
 
@@ -155,6 +155,10 @@ When the Start button is clicked, two programs will be executed:
      BOTTOM_INTERSECTION_ROI_START = 500
      BOTTOM_INTERSECTION_ROI_END = 900
      ~~~
+
+Watch Operation screen recording: http://leiblog.wang/technicaldetail/5ee4e9f35e36ca32d43f9ceb
+
+Read CH Readme.md: https://github.com/NjtechPrinceling/VehicleFlowDetection/blob/master/README_CN.md
 
 # Reference
 
