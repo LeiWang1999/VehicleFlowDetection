@@ -1,7 +1,7 @@
 import sys
 from PyQt5.QtWidgets import QMainWindow, QFileDialog, QGraphicsPixmapItem, QGraphicsScene
 from PyQt5 import QtGui
-from PyQt5.QtCore import Qt,QThread
+from PyQt5.QtCore import Qt,QThread, pyqtSignal
 import threading
 from .Ui_VechicleGUI import Ui_MainWindow
 import cv2
@@ -11,12 +11,14 @@ import tensorflow as tf
 from pathlib import Path
 import sys
 from tqdm import tqdm
+import pickle
 lib_dir = (Path(__file__).parent / '..' / 'lib').resolve()
 if str(lib_dir) not in sys.path:
     sys.path.insert(0, str(lib_dir))
 
 from core import utils
 import tools.save_image as save_image
+from tools.trackers_to_perframe import draw_bbox_with_counting
 from tools.iou_tracker import save_mod, track_viou_video, save_to_csv
 
 class UiMain(QMainWindow):
@@ -24,7 +26,7 @@ class UiMain(QMainWindow):
     def __init__(self):
         super().__init__()
         ui = Ui_MainWindow()
-        self.setAttribute(Qt.WA_DeleteOnClose)
+        ui.setupUi(self)
         self.ui = ui
         self.media_path = ""
         # Default Show Realtime Video
@@ -35,12 +37,12 @@ class UiMain(QMainWindow):
                                 "pred_mbbox/concat_2:0", "pred_lbbox/concat_2:0"]
         self.pb_file = "./models/yolov3_visdrone.pb"
         self.output_path = './output/output.avi'
-        self.annotation_path = './output/test_output/tracker.txt'
-        self.pickle_file_path = './output/test_output/tmp.pk'
+        self.counting_path = './output/counting.avi'
+        self.annotation_path = './output/tracker.txt'
+        self.pickle_file_path = './output/tmp.pk'
         self.num_classes = 12
         self.input_size = 416
         self.is_on = True
-        ui.setupUi(self)
         ui.browse.clicked.connect(self.browse_file)
         ui.generate.clicked.connect(self.generate_baseline)
         ui.start.clicked.connect(self.start_process)
@@ -137,6 +139,7 @@ class UiMain(QMainWindow):
         self.mutual_control(False)
         self.ui.pause.setEnabled(True)
         self.compute_thread = WorkThread(window=self)
+        self.compute_thread.update_graphic_viewer.connect(self.update_graphic_viewer)
         self.compute_thread.start()
 
 
@@ -153,7 +156,7 @@ class UiMain(QMainWindow):
         self.showVideo_flag = self.ui.realtimemode.isChecked()
 
 class WorkThread(QThread):
-    
+    update_graphic_viewer = pyqtSignal(np.ndarray)
     def __init__(self, window, parent=None):
         super(WorkThread, self).__init__(parent)
         self.window = window
@@ -217,8 +220,55 @@ class WorkThread(QThread):
                 else:
                     pbar.update(1)
                     self.window.ui.processrate.setText(str(pbar))
+        # Release everything if job is finished
+        out.release()
+        pbar.close()
+        # 多目标追踪
+        trackers = track_viou_video(self.window.media_path ,detections , 0.5, 0.6, 0.1, 23, 16, 'MEDIANFLOW', 1.0)
+        # 保存 trackers
+        with open(self.window.pickle_file_path, 'wb') as pk_f:
+            pickle.dump(trackers, pk_f)
+            self.window.ui.processrate.setText('=> saved trackers to pk file.')
+    
+    def vehicle_counting(self):
+        # reopen media capture
+        vid = cv2.VideoCapture(self.window.media_path)
+        with open(self.window.pickle_file_path, 'rb') as pk_f:
+            trackers = pickle.load(pk_f)
+            self.window.ui.processrate.setText('=> load trackers from pk file .')
+        if self.window.writeVideo_flag:
+            isOutput = True if self.window.output_path != "" else False
+            if isOutput:
+                video_FourCC = cv2.VideoWriter_fourcc(*'MPEG')
+                out = cv2.VideoWriter(
+                    self.window.counting_path, video_FourCC, self.window.media_fps, self.window.media_size)
+        pbar = tqdm(total=self.window.total_frame_counter)
+
+        while True: 
+            return_value, frame = vid.read()
+            if return_value != True:
+                break
+            if return_value:
+                pass
+            else:
+                raise ValueError("No image!")
+
+            result = draw_bbox_with_counting(frame, vid.get(1), trackers)
+
+            if self.window.showVideo_flag:
+                pbar.update(1)
+                self.window.ui.processrate.setText(str(pbar))
+                self.update_graphic_viewer.emit(result)
+            else:
+                pbar.update(1)
+                self.window.ui.processrate.setText(str(pbar))
+            if self.window.writeVideo_flag:
+                # save a frame
+                out.write(result)
+        # out.release()
+        # pbar.close()
         self.window.mutual_control(True)
         self.window.ui.pause.setEnabled(False)
-    
+
     def run(self):
-        self.detect_inference()
+        self.vehicle_counting()
