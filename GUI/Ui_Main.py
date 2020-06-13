@@ -83,7 +83,6 @@ class UiMain(QMainWindow):
             image, image.shape[1], image.shape[0], QtGui.QImage.Format_RGB888)
         pix = QtGui.QPixmap.fromImage(showImage)
         item = QGraphicsPixmapItem(pix)  # 创建像素图元
-
         self.scene = QGraphicsScene()  # 创建场景
         self.scene.addItem(item)
         self.ui.graphicsView.setScene(self.scene)  # 将场景添加至视图
