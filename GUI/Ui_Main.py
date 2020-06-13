@@ -42,7 +42,7 @@ class UiMain(QMainWindow):
         self.pickle_file_path = './output/tmp.pk'
         self.num_classes = 12
         self.input_size = 416
-        self.is_on = True
+        self.is_on = False
         ui.browse.clicked.connect(self.browse_file)
         ui.generate.clicked.connect(self.generate_baseline)
         ui.start.clicked.connect(self.start_process)
@@ -141,6 +141,7 @@ class UiMain(QMainWindow):
         self.ui.pause.setEnabled(True)
         self.compute_thread = WorkThread(window=self)
         self.compute_thread.update_graphic_viewer.connect(self.update_graphic_viewer)
+        self.compute_thread.update_process_message.connect(self.update_process_message)
         self.compute_thread.start()
 
 
@@ -155,16 +156,23 @@ class UiMain(QMainWindow):
 
     def update_realtimemode(self):
         self.showVideo_flag = self.ui.realtimemode.isChecked()
+    
+    def update_process_message(self, message):
+        self.ui.process_message.setText(message)
+
 
 class WorkThread(QThread):
     update_graphic_viewer = pyqtSignal(np.ndarray)
+    update_process_message = pyqtSignal(str)
     def __init__(self, window, parent=None):
         super(WorkThread, self).__init__(parent)
         self.window = window
+        self.window.is_on = True
     
     def detect_inference(self):
-        self.window.ui.process_message.setText('Detection Process')
+        self.update_process_message.emit('Detection Process')
         graph = tf.Graph()
+        detections = []
         return_tensors = utils.read_pb_return_tensors(
             graph, self.window.pb_file, self.window.return_elements)
         # 创建进度条
@@ -233,7 +241,7 @@ class WorkThread(QThread):
             self.window.ui.processrate.setText('=> saved trackers to pk file.')
     
     def vehicle_counting(self):
-        self.window.ui.process_message.setText('Counting Process')
+        self.update_process_message.emit('Counting Process')
         # reopen media capture
         vid = cv2.VideoCapture(self.window.media_path)
         with open(self.window.pickle_file_path, 'rb') as pk_f:
@@ -247,7 +255,9 @@ class WorkThread(QThread):
                     self.window.counting_path, video_FourCC, self.window.media_fps, self.window.media_size)
         pbar = tqdm(total=self.window.total_frame_counter)
 
-        while True: 
+        while True:
+            while not self.window.is_on:
+                pass
             return_value, frame = vid.read()
             if return_value != True:
                 break
@@ -274,6 +284,11 @@ class WorkThread(QThread):
         self.window.mutual_control(True)
         self.window.ui.pause.setEnabled(False)
 
+    def __del__(self):
+        self.window.is_on = False
+        self.wait()
+
     def run(self):
+        self.window.is_on = True
         self.detect_inference()
         self.vehicle_counting()

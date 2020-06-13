@@ -1,10 +1,10 @@
-## <h1 align="center">VehicleFlowDetection</h1>
+# <div align="center">VehicleFlowDetection</div>
 
-In this project, we use Yolo3 algorithm to count the traffic flow in media. Currently, this algorithm can achieve a speed of 30fps  with 2070 super. The algorithm of [tensorflow-serving-yolov3](https://github.com/Byronnar/tensorflow-serving-yolov3) and the tensorflow version of yolo algorithm is used is used because the training process of the original yolo algorithm requires high GPU computing power. In addition, this project uses Pyqt5 to design the interactive interface, which can be used to select videos and draw counting lines in a friendly manner.
+在这个工程中，我们使用Yolo3算法对视频中的车流量进行统计，目前使用 2070super 可以达到 30fps 的速度。使用了 [tensorflow-serving-yolov3](https://github.com/Byronnar/tensorflow-serving-yolov3) 的算法，原版的 yolo 算法训练的过程对 GPU 要求较高，因此使用了 tensorflow 版本的 yolo 算法。另外，本工程使用Pyqt来设计交互界面，能够比较友好的选择视频、绘制计数线。
 
-There are still many deficiencies in the project, please feel free to PR !
+工程还有很多不足，欢迎递交PR ：）
 
-**What did we mainly modify in the original `tensorflow-serving-yolov3`?**
+在原版的 tensorflow-serving-yolov3 上我们主要修改了：
 
 - `./core/config.py`
 
@@ -12,40 +12,44 @@ There are still many deficiencies in the project, please feel free to PR !
   __C.YOLO.CLASSES => class_names
   __C.TRAIN.ANNOT_PATH => train_labels
   __C.TEST.ANNOT_PATH => test_labels
-  __C.TRAIN.BATCH_SIZE => batch_size 
+  __C.TRAIN.BATCH_SIZE => banch_size 根据显存大小调整
   ~~~
 
-- Add VisDrone Dataset which is located in  `./VisDrone2018-tf-yolo/`, to Match the shooting angle of the drone
+- 增加了 VisDrone 数据集，位置在 `./VisDrone2018-tf-yolo/`
 
-  Pretrain model should be put in  `./model/yolov3_visdrone.pb`
+  训练好的模型放在 `./model/yolov3_visdrone.pb`
   
-- Transplanted the [iou-tracker](https://github.com/bochinski/iou-tracker) algorithm to achieve multi-target tracking, correlating objects in multiple frames to realize the detection of vehicle trajectories, when detecting Count when the vehicle trajectory crosses the detection line.
+- 移植了 [iou-tracker](https://github.com/bochinski/iou-tracker) 算法，实现了多目标追踪，将多帧画面中的物体进行关联，实现对车辆运动轨迹的检测，当检测到车辆轨迹穿过检测线时进行计数。
 
-The accuracy of detecting the VisDrone data set is relatively high right now
+目前检测 VisDrone 数据集的正确率已经比较高了
 
 ![mAP](http://leiblog.wang/static/image/2020/6/mAP.png)
 
-#### PyQT5 interactive interface
+效果如下：
+
+GUI界面：
 
 ![](http://leiblog.wang/static/image/2020/6/QQ20200613-215038-HD.gif)
 
-#### Detection：
+检测：
 
 ![detecting](http://leiblog.wang/static/image/2020/6/detect.gif)
 
-#### Count：
+计数：
 
 ![counting](http://leiblog.wang/static/image/2020/6/counting.gif)
 
-### Resouces
+# Part0. 资源下载
 
-Pretrained Yolov3 Model：[yolov3_visdrone.pb](http://leiblog.wang/static/2020-06-13/yolov3_visdrone.pb) 
+训练好的模型文件：[yolov3_visdrone.pb](http://leiblog.wang/static/2020-06-13/yolov3_visdrone.pb) 
 
-Training Dataset：[VisDrone2018-tf-yolo.zip](http://leiblog.wang/static/2020-06-13/VisDrone2018-tf-yolo.zip)
+训练用的数据集：[VisDrone2018-tf-yolo.zip](http://leiblog.wang/static/2020-06-13/VisDrone2018-tf-yolo.zip)
 
-Validation Media：[valid.mp4](http://leiblog.wang/static/2020-06-13/valid.mp4)
+测试视频：[valid.mp4](http://leiblog.wang/static/2020-06-13/valid.mp4)
 
-### File Tree of WorkSpace
+# Part2. 相关的说明
+
+## 1. 目录结构
 
 ~~~
 .
@@ -118,28 +122,28 @@ Validation Media：[valid.mp4](http://leiblog.wang/static/2020-06-13/valid.mp4)
     └── 2.mp4
 ~~~
 
-### Explanations
+## 2. 程序说明
 
-The environment we are running is `python >= 3.5` and `tensorflow >= 1.15.0`, run the following command on the command line to install related dependencies
+我们运行的环境是 `python >= 3.5`以及`tensorflow >= 1.15.0`,在命令行运行以下指令安装相关依赖
 
 ```bash
 pip install -r requirement.txt
 ```
 
-When the Start button is clicked, two programs will be executed:
+当点击Start按键时，会执行两段程序：
 
-1. The first thing to do is the detect operation, this program contains two processes：
+1. 首先执行的是detect操作，这段程序包含了两个过程：
 
-   1. Firstly , try the trained model `./yolov3_visdrone.pb` to detect the video selection and mark the position of the vehicle in each frame of the image. This process will also output the inspection results to `./output/output.mp4`;
-   2. Then use [iou-tracker](https://github.com/bochinski/iou-tracker) algorithm for multi-target tracking, that is, on the results of the original detection, the **traveling track of each car** is marked, this The result of the process is saved in `./output/tmp.pk`;
+   1. 先试用训练好模型 `./yolov3_visdrone.pb` 对视频选中进行检测，标出每帧图像中车辆的位置，这个过程同时会将检查的结果输出到 `./output/output.mp4` 中；
+   2. 接着使用 [iou-tracker](https://github.com/bochinski/iou-tracker) 算法进行多目标追踪，即在原先检测的结果上，标定出**每辆车的行驶轨迹**，这个过程的结果保存在 `./output/tmp.pk` 中；
 
-   Tips: You can click **Real Time Mode** Checkbox to display the detection results in real time. If it is performed on the GPU, the display may cause insufficient video memory and the program crashes. If it is not running on the GPU, the running speed is touching, but it is turned on by default. You can view `./output/output.mp4` after the program is completed.
+   注：可以通过点击**Real Time Mode**这个Checkbox来实时显示检测结果，如果是在 GPU 上进行，显示可能会造成显存不够，程序奔溃。如果不在GPU上运行，则运行速度感人，不过默认还是打开的。可以在程序运行完成后查看 `./output/output.mp4`。
 
-2. Then perform the counting operation to count the traffic flow, that is, use the vehicle trajectory data previously detected, and count when the vehicle trajectory passes the line drawn at the intersection。
+2. 接着执行counting操作，统计车流量，即使用之前检测出的车辆轨迹数据，当有车辆轨迹经过路口画的线时，进行统计。
 
-   - Same as the detect operation, **Real Time Mode** can choose whether to watch the real-time results, or you can view `./output/counting.mp4` after the program is completed.
+   - 与detect操作相同，**Real Time Mode**可以选择是否观看实时结果，也可以在程序运行完成后查看 `./output/counting.mp4`。
    
-   - The intersection line position is modified in the `baseline` GUI interface, their default values are as follows
+   - 路口划线位置在GUI界面的`baseline`里修改,他们的默认值如下
    
      ~~~python
      # 左边路口划线位置

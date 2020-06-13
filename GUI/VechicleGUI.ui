@@ -471,9 +471,9 @@ font-size:18px；</string>
     <property name="geometry">
      <rect>
       <x>780</x>
-      <y>210</y>
-      <width>361</width>
-      <height>291</height>
+      <y>390</y>
+      <width>501</width>
+      <height>311</height>
      </rect>
     </property>
     <property name="frameShape">
@@ -502,85 +502,32 @@ font-size:18px；</string>
       <string>Summary</string>
      </property>
     </widget>
-    <widget class="QWidget" name="">
+    <widget class="QLabel" name="label_6">
      <property name="geometry">
       <rect>
-       <x>0</x>
-       <y>30</y>
-       <width>361</width>
-       <height>271</height>
+       <x>10</x>
+       <y>40</y>
+       <width>481</width>
+       <height>211</height>
       </rect>
      </property>
-     <layout class="QVBoxLayout" name="verticalLayout_2">
-      <item>
-       <widget class="QPushButton" name="open_detection">
-        <property name="text">
-         <string>Open Detection Output Media</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="open_counting">
-        <property name="text">
-         <string>Open Counting Output Media</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="open_floder">
-        <property name="text">
-         <string>Reval in ouput directory</string>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </widget>
-   </widget>
-   <widget class="QWidget" name="">
-    <property name="geometry">
-     <rect>
-      <x>1010</x>
-      <y>630</y>
-      <width>271</width>
-      <height>111</height>
-     </rect>
-    </property>
-    <layout class="QVBoxLayout" name="verticalLayout">
-     <item>
-      <widget class="QLabel" name="label_6">
-       <property name="styleSheet">
-        <string notr="true">color:red;\n\nfont-family: 微软雅黑;\n\nfont-size:56px；</string>
-       </property>
-       <property name="text">
-        <string>CONTAT</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="label_7">
-       <property name="styleSheet">
-        <string notr="true">color:white;\n\nfont-family: 微软雅黑;\n\nfont-size:18px；</string>
-       </property>
-       <property name="text">
-        <string>Wechat: wanglei199901</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="label_12">
-       <property name="styleSheet">
-        <string notr="true">color:white;
+     <property name="styleSheet">
+      <string notr="true">color:white;
 
 font-family: 微软雅黑;
 
 font-size:18px；</string>
-       </property>
-       <property name="text">
-        <string>E-mail:2230647190@qq.com</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
+     </property>
+     <property name="text">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;There are two steps to counting vehicle. one is detection operation, the other is counting. Corresponding to the two media output (output.avi, counting.avi) under the ouput folder. And u can speed up the processing speed dozens of times If u have GPU.&lt;/p&gt;&lt;p&gt;The GitHub page is : &lt;a href=&quot;https://github.com/NjtechPrinceling/VehicleFlowDetection&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;https://github.com/NjtechPrinceling/VehicleFlowDetection&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+     <property name="scaledContents">
+      <bool>false</bool>
+     </property>
+     <property name="wordWrap">
+      <bool>true</bool>
+     </property>
+    </widget>
    </widget>
    <zorder>label</zorder>
    <zorder>choose_video</zorder>
