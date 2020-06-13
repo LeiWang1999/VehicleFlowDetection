@@ -3,7 +3,19 @@ from PyQt5.QtWidgets import QMainWindow, QFileDialog, QGraphicsPixmapItem, QGrap
 from PyQt5 import QtGui
 from .Ui_VechicleGUI import Ui_MainWindow
 import cv2
+import numpy as np
+import core.utils as utils
+import tensorflow as tf
+import pickle
 from PIL import Image
+# 进度条
+from tqdm import tqdm
+import tools.save_image as save_image
+from tools.iou_tracker import save_mod, track_viou_video, save_to_csv
+
+return_elements = ["input/input_data:0", "pred_sbbox/concat_2:0",
+                   "pred_mbbox/concat_2:0", "pred_lbbox/concat_2:0"]
+pb_file = "./models/yolov3_visdrone.pb"
 
 
 class UiMain(QMainWindow):
@@ -13,9 +25,14 @@ class UiMain(QMainWindow):
         ui = Ui_MainWindow()
         self.ui = ui
         self.media_path = ""
+        self.showVideo_flag = False
+        self.writeVideo_flag = True
         ui.setupUi(self)
         ui.browse.clicked.connect(self.browse_file)
         ui.generate.clicked.connect(self.generate_baseline)
+        ui.start.clicked.connect(self.start_process)
+        ui.pause.clicked.connect(self.pause_process)
+        ui.realtimemode.clicked.connect(self.update_realtimemode)
 
     def browse_file(self):
         media_path, media_type = QFileDialog.getOpenFileName(
@@ -86,3 +103,22 @@ class UiMain(QMainWindow):
         self.scene = QGraphicsScene()  # 创建场景
         self.scene.addItem(item)
         self.ui.graphicsView.setScene(self.scene)  # 将场景添加至视图
+
+    '''
+        Control mutual Status
+    '''
+
+    def mutual_control(self, status: bool):
+        self.ui.browse.setCheckable(status)
+        self.ui.generate.setCheckable(status)
+        self.ui.start.setCheckable(status)
+        self.ui.realtimemode.setCheckable(status)
+
+    def start_process(self):
+        pass
+
+    def pause_process(self):
+        print("Pause button pressed")
+
+    def update_realtimemode(self):
+        self.showVideo_flag = self.ui.realtimemode.isChecked()

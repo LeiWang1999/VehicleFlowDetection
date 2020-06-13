@@ -154,26 +154,37 @@ class Ui_MainWindow(object):
         self.graphicsView.setGeometry(QtCore.QRect(0, 50, 771, 461))
         self.graphicsView.setObjectName("graphicsView")
         self.label_3 = QtWidgets.QLabel(self.draw_baseline)
-        self.label_3.setGeometry(QtCore.QRect(10, 0, 711, 51))
+        self.label_3.setGeometry(QtCore.QRect(10, 0, 611, 51))
         self.label_3.setStyleSheet("color:white;\n"
                                    "\n"
                                    "font-family: 微软雅黑;\n"
                                    "\n"
                                    "font-size:18px；")
         self.label_3.setObjectName("label_3")
+        self.realtimemode = QtWidgets.QRadioButton(self.draw_baseline)
+        self.realtimemode.setGeometry(QtCore.QRect(630, 10, 131, 31))
+        self.realtimemode.setObjectName("realtimemode")
         self.control_process = QtWidgets.QFrame(self.centralwidget)
-        self.control_process.setGeometry(QtCore.QRect(20, 630, 431, 51))
+        self.control_process.setGeometry(QtCore.QRect(20, 600, 761, 101))
         self.control_process.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.control_process.setFrameShadow(QtWidgets.QFrame.Raised)
         self.control_process.setObjectName("control_process")
-        self.horizontalLayout_3 = QtWidgets.QHBoxLayout(self.control_process)
-        self.horizontalLayout_3.setObjectName("horizontalLayout_3")
+        self.gridLayout_2 = QtWidgets.QGridLayout(self.control_process)
+        self.gridLayout_2.setObjectName("gridLayout_2")
         self.start = QtWidgets.QPushButton(self.control_process)
         self.start.setObjectName("start")
-        self.horizontalLayout_3.addWidget(self.start)
+        self.gridLayout_2.addWidget(self.start, 1, 0, 1, 1)
         self.pause = QtWidgets.QPushButton(self.control_process)
         self.pause.setObjectName("pause")
-        self.horizontalLayout_3.addWidget(self.pause)
+        self.gridLayout_2.addWidget(self.pause, 1, 2, 1, 1)
+        self.processrate = QtWidgets.QLabel(self.control_process)
+        self.processrate.setStyleSheet("color:white;\n"
+                                       "\n"
+                                       "font-family: 微软雅黑;\n"
+                                       "\n"
+                                       "font-size:18px；")
+        self.processrate.setObjectName("processrate")
+        self.gridLayout_2.addWidget(self.processrate, 0, 0, 1, 2)
         self.show_result = QtWidgets.QFrame(self.centralwidget)
         self.show_result.setGeometry(QtCore.QRect(920, 450, 361, 291))
         self.show_result.setFrameShape(QtWidgets.QFrame.StyledPanel)
@@ -210,8 +221,7 @@ class Ui_MainWindow(object):
                                               "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
                                               "p, li { white-space: pre-wrap; }\n"
                                               "</style></head><body style=\" font-family:\'Heiti SC\'; font-size:13pt; font-weight:400; font-style:normal;\">\n"
-                                              "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">400</p>\n"
-                                              "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>"))
+                                              "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">400</p></body></html>"))
         self.left_position.setPlaceholderText(
             _translate("MainWindow", "number"))
         self.left_start.setHtml(_translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
@@ -230,16 +240,14 @@ class Ui_MainWindow(object):
                                                "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
                                                "p, li { white-space: pre-wrap; }\n"
                                                "</style></head><body style=\" font-family:\'.AppleSystemUIFont\'; font-size:13pt; font-weight:400; font-style:normal;\">\n"
-                                               "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'Heiti SC\';\">1000</span></p>\n"
-                                               "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:\'Heiti SC\';\"><br /></p></body></html>"))
+                                               "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'Heiti SC\';\">1000</span></p></body></html>"))
         self.right_position.setPlaceholderText(
             _translate("MainWindow", "number"))
         self.left_end.setHtml(_translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
                                          "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
                                          "p, li { white-space: pre-wrap; }\n"
                                          "</style></head><body style=\" font-family:\'.AppleSystemUIFont\'; font-size:13pt; font-weight:400; font-style:normal;\">\n"
-                                         "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'Heiti SC\';\">550</span></p>\n"
-                                         "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:\'Heiti SC\';\"><br /></p></body></html>"))
+                                         "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'Heiti SC\';\">550</span></p></body></html>"))
         self.left_end.setPlaceholderText(_translate("MainWindow", "number"))
         self.bottom_start.setHtml(_translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
                                              "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
@@ -265,8 +273,7 @@ class Ui_MainWindow(object):
                                             "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
                                             "p, li { white-space: pre-wrap; }\n"
                                             "</style></head><body style=\" font-family:\'.AppleSystemUIFont\'; font-size:13pt; font-weight:400; font-style:normal;\">\n"
-                                            "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'Heiti SC\';\">0</span></p>\n"
-                                            "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:\'Heiti SC\';\"><br /></p></body></html>"))
+                                            "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'Heiti SC\';\">0</span></p></body></html>"))
         self.right_start.setPlaceholderText(_translate("MainWindow", "number"))
         self.label_9.setText(_translate("MainWindow", "Left"))
         self.label_8.setText(_translate("MainWindow", "End"))
@@ -280,6 +287,9 @@ class Ui_MainWindow(object):
         self.generate.setText(_translate("MainWindow", "Generate"))
         self.label_3.setText(_translate(
             "MainWindow", "Draw Baseline  - Drag the scroll bar to view the full picture while the size of target is too large"))
+        self.realtimemode.setText(_translate("MainWindow", "Real Time Mode"))
         self.start.setText(_translate("MainWindow", "Start"))
         self.pause.setText(_translate("MainWindow", "Pause"))
+        self.processrate.setText(_translate(
+            "MainWindow", "Procfess Percent：0%"))
         self.label_19.setText(_translate("MainWindow", "Show Result"))
