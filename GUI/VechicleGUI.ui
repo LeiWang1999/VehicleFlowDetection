@@ -410,9 +410,9 @@ font-size:18px；</string>
    <widget class="QFrame" name="control_process">
     <property name="geometry">
      <rect>
-      <x>20</x>
+      <x>10</x>
       <y>600</y>
-      <width>761</width>
+      <width>771</width>
       <height>101</height>
      </rect>
     </property>
@@ -437,7 +437,7 @@ font-size:18px；</string>
        </property>
       </widget>
      </item>
-     <item row="0" column="0" colspan="2">
+     <item row="0" column="0" colspan="3">
       <widget class="QLabel" name="processrate">
        <property name="styleSheet">
         <string notr="true">color:white;
@@ -447,7 +447,7 @@ font-family: 微软雅黑;
 font-size:18px；</string>
        </property>
        <property name="text">
-        <string>Procfess Percent：0%</string>
+        <string>Process Rate：0%</string>
        </property>
       </widget>
      </item>
