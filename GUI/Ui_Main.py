@@ -253,7 +253,7 @@ class WorkThread(QThread):
             else:
                 raise ValueError("No image!")
 
-            result = draw_bbox_with_counting(frame, vid.get(1), trackers)
+            result = draw_bbox_with_counting(frame, vid.get(1), trackers, self.window)
 
             if self.window.showVideo_flag:
                 pbar.update(1)

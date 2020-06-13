@@ -33,7 +33,7 @@ bbox_color = {'ignored-regions':(0xFF,0x66,0x00),
 def trackers_to_perframe(trackers):
     pass
 
-def draw_bbox_with_counting(image, image_index, trackers, show_box=True, show_label=True):
+def draw_bbox_with_counting(image, image_index, trackers, window, show_box=True, show_label=True):
 
     global left_vehicle_counter
     global right_vehicle_counter
@@ -70,19 +70,19 @@ def draw_bbox_with_counting(image, image_index, trackers, show_box=True, show_la
                     center_last = (((bbox_last[0])+(bbox_last[2]))/2, ((bbox_last[1])+(bbox_last[3]))/2)
 
                     left_vehicle_is_online = counting_horizontal(center_now, center_last, \
-                        LEFT_INTERSECTION_ROI_POSITION, \
-                        LEFT_INTERSECTION_ROI_START, \
-                        LEFT_INTERSECTION_ROI_END)
+                        window.left_position, \
+                        window.left_start, \
+                        window.left_end)
 
                     right_vehicle_is_online = counting_horizontal(center_now, center_last, \
-                        RIGHT_INTERSECTION_ROI_POSITION, \
-                        RIGHT_INTERSECTION_ROI_START, \
-                        RIGHT_INTERSECTION_ROI_END)
+                        window.right_position, \
+                        window.right_left, \
+                        window.right_end)
 
                     bottom_vehicle_is_online = counting_vertical(center_now, center_last, \
-                        BOTTOM_INTERSECTION_ROI_POSITION, \
-                        BOTTOM_INTERSECTION_ROI_START, \
-                        BOTTOM_INTERSECTION_ROI_END)
+                        window.bottom_position, \
+                        window.bottom_start, \
+                        window.bottom_end)
 
                     if left_vehicle_is_online:
                         left_vehicle_counter += 1
@@ -93,31 +93,31 @@ def draw_bbox_with_counting(image, image_index, trackers, show_box=True, show_la
 
     
     cv2.line(image, \
-        (BOTTOM_INTERSECTION_ROI_START, BOTTOM_INTERSECTION_ROI_POSITION), \
-        (BOTTOM_INTERSECTION_ROI_END, BOTTOM_INTERSECTION_ROI_POSITION), \
-        (0, 0, 0xFF), 5)
+        (window.bottom_start, window.bottom_position), \
+        (window.bottom_end, window.bottom_position), \
+        (0xFF, 0, 0), 5)
     cv2.line(image, \
-        (RIGHT_INTERSECTION_ROI_POSITION, RIGHT_INTERSECTION_ROI_START), \
-        (RIGHT_INTERSECTION_ROI_POSITION, RIGHT_INTERSECTION_ROI_END), \
-        (0, 0, 0xFF), 5)
+        (window.right_position, window.right_start), \
+        (window.right_position, window.right_end), \
+        (0, 0xFF, 0), 5)
     cv2.line(image, \
-        (LEFT_INTERSECTION_ROI_POSITION, LEFT_INTERSECTION_ROI_START), \
-        (LEFT_INTERSECTION_ROI_POSITION, LEFT_INTERSECTION_ROI_END), \
+        (window.left_position, window.left_start), \
+        (window.left_position, window.left_end), \
         (0, 0, 0xFF), 5)
 
     left_info = str(left_vehicle_counter)
     right_info = str(right_vehicle_counter)
     bottom_info = str(bottom_vehicle_counter)
     cv2.putText(image, text=left_info, 
-                org=(LEFT_INTERSECTION_ROI_POSITION+10, LEFT_INTERSECTION_ROI_START+20), 
+                org=(window.left_position+10, window.left_start+20), 
                 fontFace=cv2.FONT_HERSHEY_SIMPLEX,
-                fontScale=1, color=(0, 0, 255), thickness=2)
+                fontScale=1, color=(255, 0, 0), thickness=2)
     cv2.putText(image, text=right_info, 
-                org=(RIGHT_INTERSECTION_ROI_POSITION-60, RIGHT_INTERSECTION_ROI_END-10), 
+                org=(window.right_position-60, window.right_end-10), 
                 fontFace=cv2.FONT_HERSHEY_SIMPLEX,
-                fontScale=1, color=(0, 0, 255), thickness=2)
+                fontScale=1, color=(0, 255, 0), thickness=2)
     cv2.putText(image, text=bottom_info, 
-                org=(BOTTOM_INTERSECTION_ROI_START+10, BOTTOM_INTERSECTION_ROI_POSITION-20), 
+                org=(window.bottom_start+10, window.bottom_end-20), 
                 fontFace=cv2.FONT_HERSHEY_SIMPLEX,
                 fontScale=1, color=(0, 0, 255), thickness=2)
 
