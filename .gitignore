@@ -4,3 +4,5 @@
 /models/*
 !/models/.gitkeep
 
+/output/*
+!/output/.gitkeep
