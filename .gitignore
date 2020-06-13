@@ -7,4 +7,6 @@
 /output/*
 !/output/.gitkeep
 
+/debug.txt
+/detection.txt
 /__pycache__/*
