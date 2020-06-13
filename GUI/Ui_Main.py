@@ -27,7 +27,9 @@ class UiMain(QMainWindow):
         self.setAttribute(Qt.WA_DeleteOnClose)
         self.ui = ui
         self.media_path = ""
-        self.showVideo_flag = False
+        # Default Show Realtime Video
+        self.showVideo_flag = True
+        self.ui.realtimemode.setChecked(True)
         self.writeVideo_flag = True
         self.return_elements = ["input/input_data:0", "pred_sbbox/concat_2:0",
                                 "pred_mbbox/concat_2:0", "pred_lbbox/concat_2:0"]
@@ -140,7 +142,11 @@ class UiMain(QMainWindow):
 
 
     def pause_process(self):
-        self.is_on = False
+        self.is_on = not self.is_on
+        if self.is_on == True:
+            self.ui.pause.setText = 'pause'
+        else:
+            self.ui.pause.setText = 'continue'
 
 
     def update_realtimemode(self):
@@ -210,7 +216,6 @@ class WorkThread(QThread):
                     self.window.ui.processrate.setText(str(pbar))
                 else:
                     pbar.update(1)
-                    self.window.update_graphic_viewer(result)
                     self.window.ui.processrate.setText(str(pbar))
         self.window.mutual_control(True)
         self.window.ui.pause.setEnabled(False)
