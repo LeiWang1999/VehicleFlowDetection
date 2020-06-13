@@ -27,7 +27,7 @@ The accuracy of detecting the VisDrone data set is relatively high right now
 
 #### PyQT5 interactive interface
 
-![](http://leiblog.wang/static/image/2020/6/QQ20200613-215038-HD.gif)
+![GUI](http://leiblog.wang/static/image/2020/6/QQ20200613-215038-HD.gif)
 
 #### Detection：
 
