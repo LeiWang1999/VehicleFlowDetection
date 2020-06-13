@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file '/Users/wanglei/DLHungYiLee/PyQt/01_Vechicle_Flow_Detection/GUI/VechicleGUI.ui'
+# Form implementation generated from reading ui file '/Users/wanglei/DLHungYiLee/PyQt/01_Vehicle_Flow_Detection/GUI/VechicleGUI.ui'
 #
 # Created by: PyQt5 UI code generator 5.9.2
 #
@@ -168,8 +168,16 @@ class Ui_MainWindow(object):
 "font-size:18px；")
         self.processrate.setObjectName("processrate")
         self.gridLayout_2.addWidget(self.processrate, 0, 0, 1, 3)
+        self.process_message = QtWidgets.QLabel(self.control_process)
+        self.process_message.setStyleSheet("color:white;\n"
+"\n"
+"font-family: 微软雅黑;\n"
+"\n"
+"font-size:18px；")
+        self.process_message.setObjectName("process_message")
+        self.gridLayout_2.addWidget(self.process_message, 1, 1, 1, 1)
         self.show_result = QtWidgets.QFrame(self.centralwidget)
-        self.show_result.setGeometry(QtCore.QRect(920, 450, 361, 291))
+        self.show_result.setGeometry(QtCore.QRect(780, 210, 361, 291))
         self.show_result.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.show_result.setFrameShadow(QtWidgets.QFrame.Raised)
         self.show_result.setObjectName("show_result")
@@ -181,12 +189,52 @@ class Ui_MainWindow(object):
 "\n"
 "font-size:18px；")
         self.label_19.setObjectName("label_19")
+        self.widget = QtWidgets.QWidget(self.show_result)
+        self.widget.setGeometry(QtCore.QRect(0, 30, 361, 271))
+        self.widget.setObjectName("widget")
+        self.verticalLayout_2 = QtWidgets.QVBoxLayout(self.widget)
+        self.verticalLayout_2.setContentsMargins(0, 0, 0, 0)
+        self.verticalLayout_2.setObjectName("verticalLayout_2")
+        self.open_detection = QtWidgets.QPushButton(self.widget)
+        self.open_detection.setObjectName("open_detection")
+        self.verticalLayout_2.addWidget(self.open_detection)
+        self.open_counting = QtWidgets.QPushButton(self.widget)
+        self.open_counting.setObjectName("open_counting")
+        self.verticalLayout_2.addWidget(self.open_counting)
+        self.open_floder = QtWidgets.QPushButton(self.widget)
+        self.open_floder.setObjectName("open_floder")
+        self.verticalLayout_2.addWidget(self.open_floder)
+        self.widget1 = QtWidgets.QWidget(self.centralwidget)
+        self.widget1.setGeometry(QtCore.QRect(1010, 630, 271, 111))
+        self.widget1.setObjectName("widget1")
+        self.verticalLayout = QtWidgets.QVBoxLayout(self.widget1)
+        self.verticalLayout.setContentsMargins(0, 0, 0, 0)
+        self.verticalLayout.setObjectName("verticalLayout")
+        self.label_6 = QtWidgets.QLabel(self.widget1)
+        self.label_6.setStyleSheet("color:red;\\n\\nfont-family: 微软雅黑;\\n\\nfont-size:56px；")
+        self.label_6.setObjectName("label_6")
+        self.verticalLayout.addWidget(self.label_6)
+        self.label_7 = QtWidgets.QLabel(self.widget1)
+        self.label_7.setStyleSheet("color:white;\\n\\nfont-family: 微软雅黑;\\n\\nfont-size:18px；")
+        self.label_7.setObjectName("label_7")
+        self.verticalLayout.addWidget(self.label_7)
+        self.label_12 = QtWidgets.QLabel(self.widget1)
+        self.label_12.setStyleSheet("color:white;\n"
+"\n"
+"font-family: 微软雅黑;\n"
+"\n"
+"font-size:18px；")
+        self.label_12.setObjectName("label_12")
+        self.verticalLayout.addWidget(self.label_12)
         self.label.raise_()
         self.choose_video.raise_()
         self.baseline_info.raise_()
         self.draw_baseline.raise_()
         self.control_process.raise_()
         self.show_result.raise_()
+        self.label_6.raise_()
+        self.label_7.raise_()
+        self.label_12.raise_()
         MainWindow.setCentralWidget(self.centralwidget)
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
         self.statusbar.setObjectName("statusbar")
@@ -268,5 +316,12 @@ class Ui_MainWindow(object):
         self.start.setText(_translate("MainWindow", "Start"))
         self.pause.setText(_translate("MainWindow", "Pause"))
         self.processrate.setText(_translate("MainWindow", "Process Rate：0%"))
-        self.label_19.setText(_translate("MainWindow", "Show Result"))
+        self.process_message.setText(_translate("MainWindow", "Status Bar"))
+        self.label_19.setText(_translate("MainWindow", "Summary"))
+        self.open_detection.setText(_translate("MainWindow", "Open Detection Output Media"))
+        self.open_counting.setText(_translate("MainWindow", "Open Counting Output Media"))
+        self.open_floder.setText(_translate("MainWindow", "Reval in ouput directory"))
+        self.label_6.setText(_translate("MainWindow", "CONTAT"))
+        self.label_7.setText(_translate("MainWindow", "Wechat: wanglei199901"))
+        self.label_12.setText(_translate("MainWindow", "E-mail:2230647190@qq.com"))
 

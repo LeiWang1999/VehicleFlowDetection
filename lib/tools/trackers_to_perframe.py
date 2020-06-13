@@ -76,7 +76,7 @@ def draw_bbox_with_counting(image, image_index, trackers, window, show_box=True,
 
                     right_vehicle_is_online = counting_horizontal(center_now, center_last, \
                         window.right_position, \
-                        window.right_left, \
+                        window.right_start, \
                         window.right_end)
 
                     bottom_vehicle_is_online = counting_vertical(center_now, center_last, \
@@ -95,7 +95,7 @@ def draw_bbox_with_counting(image, image_index, trackers, window, show_box=True,
     cv2.line(image, \
         (window.bottom_start, window.bottom_position), \
         (window.bottom_end, window.bottom_position), \
-        (0xFF, 0, 0), 5)
+        (0, 0, 0xFF,), 5)
     cv2.line(image, \
         (window.right_position, window.right_start), \
         (window.right_position, window.right_end), \
@@ -103,7 +103,7 @@ def draw_bbox_with_counting(image, image_index, trackers, window, show_box=True,
     cv2.line(image, \
         (window.left_position, window.left_start), \
         (window.left_position, window.left_end), \
-        (0, 0, 0xFF), 5)
+        (0xFF, 0, 0), 5)
 
     left_info = str(left_vehicle_counter)
     right_info = str(right_vehicle_counter)
@@ -117,7 +117,7 @@ def draw_bbox_with_counting(image, image_index, trackers, window, show_box=True,
                 fontFace=cv2.FONT_HERSHEY_SIMPLEX,
                 fontScale=1, color=(0, 255, 0), thickness=2)
     cv2.putText(image, text=bottom_info, 
-                org=(window.bottom_start+10, window.bottom_end-20), 
+                org=(window.bottom_start+10, window.bottom_position-20), 
                 fontFace=cv2.FONT_HERSHEY_SIMPLEX,
                 fontScale=1, color=(0, 0, 255), thickness=2)
 

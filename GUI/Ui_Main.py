@@ -98,19 +98,20 @@ class UiMain(QMainWindow):
         except ValueError:
             self.ui.baseline_message.setText(
                 "Argument Fault! Please input number!")
-        cv2.line(self.frame,
+        image = self.frame.copy()
+        cv2.line(image,
                  (self.left_position, self.left_start),
                  (self.left_position, self.left_end),
                  (0xFF, 0, 0), 5)
-        cv2.line(self.frame,
+        cv2.line(image,
                  (self.right_position, self.right_start),
                  (self.right_position, self.right_end),
                  (0, 0xFF, 0), 5)
-        cv2.line(self.frame,
+        cv2.line(image,
                  (self.bottom_start, self.bottom_position),
                  (self.bottom_end, self.bottom_position),
                  (0,  0, 0xFF), 5)
-        self.update_graphic_viewer(self.frame)
+        self.update_graphic_viewer(image)
 
     def update_graphic_viewer(self, image):
         showImage = QtGui.QImage(
@@ -147,9 +148,9 @@ class UiMain(QMainWindow):
     def pause_process(self):
         self.is_on = not self.is_on
         if self.is_on == True:
-            self.ui.pause.setText = 'pause'
+            self.ui.pause.setText('pause')
         else:
-            self.ui.pause.setText = 'continue'
+            self.ui.pause.setText('continue')
 
 
     def update_realtimemode(self):
@@ -162,6 +163,7 @@ class WorkThread(QThread):
         self.window = window
     
     def detect_inference(self):
+        self.window.ui.process_message.setText('Detection Process')
         graph = tf.Graph()
         return_tensors = utils.read_pb_return_tensors(
             graph, self.window.pb_file, self.window.return_elements)
@@ -231,6 +233,7 @@ class WorkThread(QThread):
             self.window.ui.processrate.setText('=> saved trackers to pk file.')
     
     def vehicle_counting(self):
+        self.window.ui.process_message.setText('Counting Process')
         # reopen media capture
         vid = cv2.VideoCapture(self.window.media_path)
         with open(self.window.pickle_file_path, 'rb') as pk_f:
@@ -249,6 +252,7 @@ class WorkThread(QThread):
             if return_value != True:
                 break
             if return_value:
+                self.window.frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
                 pass
             else:
                 raise ValueError("No image!")
@@ -265,10 +269,11 @@ class WorkThread(QThread):
             if self.window.writeVideo_flag:
                 # save a frame
                 out.write(result)
-        # out.release()
-        # pbar.close()
+        out.release()
+        pbar.close()
         self.window.mutual_control(True)
         self.window.ui.pause.setEnabled(False)
 
     def run(self):
+        self.detect_inference()
         self.vehicle_counting()
