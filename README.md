@@ -39,7 +39,7 @@ The accuracy of detecting the VisDrone data set is relatively high right now
 
 ### Resouces
 
-Pretrained Yolov3 Model：[yolov3_visdrone.pb](http://leiblog.wang/static/2020-06-13/yolov3_visdrone.pb) 
+Pretrained Yolov3 Model：[yolov3_visdrone.pb](http://leiblog.wang/static/2020-06-13/yolov3_visdrone.zip) 
 
 Training Dataset：[VisDrone2018-tf-yolo.zip](http://leiblog.wang/static/2020-06-13/VisDrone2018-tf-yolo.zip)
 
