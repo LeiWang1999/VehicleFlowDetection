@@ -1,6 +1,12 @@
 /videos/*
 !/videos/.gitkeep
 
+/build/*
+!/build/.gitkeep
+
+/dist/*
+!/dist/.gitkeep
+
 /models/*
 !/models/.gitkeep
 
