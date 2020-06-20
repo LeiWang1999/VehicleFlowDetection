@@ -128,8 +128,9 @@ pip install -r requirement.txt
 
 > Tested configurations
 >
-> | nvidia driver | nvidia-440.82          |
+> | Software      | Version                |
 > | ------------- | ---------------------- |
+> | nvidia driver | nvidia-440.82          |
 > | Python        | 3.6.9                  |
 > | tensorflow    | tensorflow-gpu==1.15.3 |
 > | cuDNN         | 7.6.4                  |
