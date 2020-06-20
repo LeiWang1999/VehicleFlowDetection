@@ -17,3 +17,5 @@
 /debug.txt
 /detection.txt
 /__pycache__/*
+
+__pycache__/

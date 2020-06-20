@@ -126,6 +126,15 @@ The environment we are running is `python >= 3.5` and `tensorflow >= 1.15.0`, ru
 pip install -r requirement.txt
 ```
 
+> Tested configurations
+>
+> | nvidia driver | nvidia-440.82          |
+> | ------------- | ---------------------- |
+> | Python        | 3.6.9                  |
+> | tensorflow    | tensorflow-gpu==1.15.3 |
+> | cuDNN         | 7.6.4                  |
+> | CUDA          | 10.1(V10.1.243)        |
+
 When the Start button is clicked, two programs will be executed:
 
 1. The first thing to do is the detect operation, this program contains two processes：
