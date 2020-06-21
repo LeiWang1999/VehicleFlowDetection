@@ -1,6 +1,6 @@
 ## <h1 align="center">VehicleFlowDetection</h1>
 
-In this project, we use Yolo3 algorithm to count the traffic flow in media. Currently, this algorithm can achieve a speed of 30fps  with 2070 super. The algorithm of [tensorflow-serving-yolov3](https://github.com/Byronnar/tensorflow-serving-yolov3) and the tensorflow version of yolo algorithm is used is used because the training process of the original yolo algorithm requires high GPU computing power. In addition, this project uses Pyqt5 to design the interactive interface, which can be used to select videos and draw counting lines in a friendly manner.
+In this project, we use Yolo3 algorithm to count the traffic flow in media. Currently, this algorithm can achieve a speed of 30fps with 2070 super. The algorithm of [tensorflow-serving-yolov3](https://github.com/Byronnar/tensorflow-serving-yolov3) and the tensorflow version of yolo algorithm is used is used because the training process of the original yolo algorithm requires high GPU computing power. In addition, this project uses Pyqt5 to design the interactive interface, which can be used to select videos and draw counting lines in a friendly manner.
 
 There are still many deficiencies in the project, please feel free to PR !
 
@@ -8,17 +8,17 @@ There are still many deficiencies in the project, please feel free to PR !
 
 - `./core/config.py`
 
-  ~~~
+  ```
   __C.YOLO.CLASSES => class_names
   __C.TRAIN.ANNOT_PATH => train_labels
   __C.TEST.ANNOT_PATH => test_labels
-  __C.TRAIN.BATCH_SIZE => batch_size 
-  ~~~
+  __C.TRAIN.BATCH_SIZE => batch_size
+  ```
 
-- Add VisDrone Dataset which is located in  `./VisDrone2018-tf-yolo/`, to Match the shooting angle of the drone
+- Add VisDrone Dataset which is located in `./VisDrone2018-tf-yolo/`, to Match the shooting angle of the drone
 
-  Pretrain model should be put in  `./model/yolov3_visdrone.pb`
-  
+  Pretrain model should be put in `./model/yolov3_visdrone.pb`
+
 - Transplanted the [iou-tracker](https://github.com/bochinski/iou-tracker) algorithm to achieve multi-target tracking, correlating objects in multiple frames to realize the detection of vehicle trajectories, when detecting Count when the vehicle trajectory crosses the detection line.
 
 The accuracy of detecting the VisDrone data set is relatively high right now
@@ -39,7 +39,7 @@ The accuracy of detecting the VisDrone data set is relatively high right now
 
 ### Resouces
 
-Pretrained Yolov3 Model：[yolov3_visdrone.pb](http://leiblog.wang/static/2020-06-13/yolov3_visdrone.zip) 
+Pretrained Yolov3 Model：[yolov3_visdrone.pb](http://leiblog.wang/static/2020-06-13/yolov3_visdrone.zip)
 
 Training Dataset：[VisDrone2018-tf-yolo.zip](http://leiblog.wang/static/2020-06-13/VisDrone2018-tf-yolo.zip)
 
@@ -47,7 +47,7 @@ Validation Media：[valid.mp4](http://leiblog.wang/static/2020-06-13/valid.mp4)
 
 ### File Tree of WorkSpace
 
-~~~
+```
 .
 ├── GUI
 │   ├── Ui_Main.py
@@ -57,7 +57,7 @@ Validation Media：[valid.mp4](http://leiblog.wang/static/2020-06-13/valid.mp4)
 │       ├── Ui_Main.cpython-37.pyc
 │       └── Ui_VechicleGUI.cpython-37.pyc
 ├── README.md
-├── VisDrone2018-tf-yolo 
+├── VisDrone2018-tf-yolo
 │   ├── scripts
 │   │   ├── visdrone2tfyolo.py
 │   │   └── visdrone2tfyolo.sh
@@ -116,14 +116,14 @@ Validation Media：[valid.mp4](http://leiblog.wang/static/2020-06-13/valid.mp4)
 └── videos
     ├── 1.mp4
     └── 2.mp4
-~~~
+```
 
 ### Explanations
 
 The environment we are running is `python >= 3.5` and `tensorflow >= 1.15.0`, run the following command on the command line to install related dependencies
 
 ```bash
-pip install -r requirement.txt
+pip install -r requirements.txt
 ```
 
 > Tested configurations
@@ -148,10 +148,10 @@ When the Start button is clicked, two programs will be executed:
 2. Then perform the counting operation to count the traffic flow, that is, use the vehicle trajectory data previously detected, and count when the vehicle trajectory passes the line drawn at the intersection。
 
    - Same as the detect operation, **Real Time Mode** can choose whether to watch the real-time results, or you can view `./output/counting.mp4` after the program is completed.
-   
+
    - The intersection line position is modified in the `baseline` GUI interface, their default values are as follows
-   
-     ~~~python
+
+     ```python
      # 左边路口划线位置
      LEFT_INTERSECTION_ROI_POSITION = 400
      LEFT_INTERSECTION_ROI_START = 300
@@ -164,7 +164,7 @@ When the Start button is clicked, two programs will be executed:
      BOTTOM_INTERSECTION_ROI_POSITION = 500
      BOTTOM_INTERSECTION_ROI_START = 500
      BOTTOM_INTERSECTION_ROI_END = 900
-     ~~~
+     ```
 
 Watch Operation screen recording: http://leiblog.wang/technicaldetail/5ee4e9f35e36ca32d43f9ceb
 

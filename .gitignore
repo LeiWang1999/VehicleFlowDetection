@@ -14,8 +14,7 @@
 !/output/.gitkeep
 
 /*.spec
-/debug.txt
-/detection.txt
-/__pycache__/*
+debug.txt
+detection.txt
 
 __pycache__/
