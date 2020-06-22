@@ -120,7 +120,8 @@ Validation Media：[valid.mp4](http://leiblog.wang/static/2020-06-13/valid.mp4)
 
 ### Explanations
 
-The environment we are running is `python >= 3.5` and `tensorflow >= 1.15.0`, run the following command on the command line to install related dependencies
+The environment we are running is `python >= 3.6` and `tensorflow >= 1.15.0`, run the following command on the command line to install related dependencies
+> Python37 is not recommended if u are using windows os, i failed to install some package in this version, but with python3.6
 
 ```bash
 pip install -r requirements.txt

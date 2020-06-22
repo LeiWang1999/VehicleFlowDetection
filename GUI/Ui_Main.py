@@ -184,7 +184,6 @@ class WorkThread(QThread):
                     video_FourCC = cv2.VideoWriter_fourcc(*'MPEG')
                     out = cv2.VideoWriter(
                         self.window.output_path, video_FourCC, self.window.media_fps, self.window.media_size)
-                    list_file = open('detection.txt', 'w')
                     frame_index = -1
             while True:
                 while not self.window.is_on:
@@ -211,10 +210,6 @@ class WorkThread(QThread):
                                     np.reshape(pred_lbbox, (-1, 5 + self.window.num_classes))], axis=0)
                 bboxes = utils.postprocess_boxes(pred_bbox, frame_size, self.window.input_size, 0.45)
                 bboxes = utils.nms(bboxes, 0.45, method='nms')
-
-                # save images
-                # save_image.save_image(annotation_file, frame, vid.get(1), bboxes)
-
                 image = utils.draw_bbox(frame, bboxes)
                 # image = utils.draw_bbox(frame, bboxes, vid.get(1))
                 # 保存为 iou_tracker 格式
