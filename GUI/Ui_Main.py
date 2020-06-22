@@ -224,7 +224,7 @@ class WorkThread(QThread):
                     # save a frame
                     out.write(result)
                 if self.window.showVideo_flag:
-                    self.window.update_graphic_viewer(result)
+                    self.update_graphic_viewer.emit(result)
                     pbar.update(1)
                     self.window.ui.processrate.setText(str(pbar))
                 else:
