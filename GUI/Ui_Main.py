@@ -1,5 +1,13 @@
 import sys
-from PyQt5.QtWidgets import QMainWindow, QFileDialog, QGraphicsPixmapItem, QGraphicsScene
+from PyQt5.QtWidgets import (QMainWindow,
+                            QFileDialog,
+                            QGraphicsPixmapItem,
+                            QGraphicsScene,
+                            QLabel,
+                            QGridLayout,
+                            QHeaderView,
+                            QTableWidgetItem,
+                            )
 from PyQt5 import QtGui
 from PyQt5.QtCore import Qt,QThread, pyqtSignal
 import threading
@@ -44,18 +52,20 @@ class UiMain(QMainWindow):
         self.num_classes = 12
         self.input_size = 416
         self.is_on = False
+        self.MAX_LINE=ui.baseline_table.rowCount()
         self.start_point = ()
+        self.end_point = ()
         self.line_list = []
         self.draw_flag = 0  # when line start flag = 0 , line end flag = 1
 
     
         ui.graphicsView.mousePressEvent = self.grapic_view_mousePressEvent
         ui.browse.clicked.connect(self.browse_file)
-        # ui.generate.clicked.connect(self.generate_baseline)
         ui.start.clicked.connect(self.start_process)
         ui.pause.setEnabled(False)
         ui.pause.clicked.connect(self.pause_process)
         ui.realtimemode.clicked.connect(self.update_realtimemode)
+        ui.line_clear.clicked.connect(self.clear_baseline)
 
     def browse_file(self):
         media_path, media_type = QFileDialog.getOpenFileName(
@@ -87,10 +97,7 @@ class UiMain(QMainWindow):
         self.update_graphic_viewer(frame)
 
     def update_baseline(self):
-        # Validate
-        if self.media_path == "":
-            self.ui.baseline_message.setText("Please open media first!")
-            return
+        # update baseline viewer
         image = self.frame.copy()
         for line in self.line_list:
             cv2.line(image,
@@ -98,6 +105,25 @@ class UiMain(QMainWindow):
                  line["end_point"],
                  line["line_color"], 5)
         self.update_graphic_viewer(image)
+
+        # update baseline info
+        # 设置一个标签
+        for index, line in enumerate(self.line_list):
+            Labelindex = QTableWidgetItem(str(index))
+            Labelindex.setFont(QtGui.QFont('Times', 14))
+            Labelindex.setForeground(QtGui.QBrush(QtGui.QColor(*line["line_color"])))
+            Labelindex.setTextAlignment(Qt.AlignCenter)
+            LabelStart = QTableWidgetItem(str(line["start_point"]))
+            LabelStart.setFont(QtGui.QFont('Times', 14))
+            LabelStart.setForeground(QtGui.QBrush(QtGui.QColor(*line["line_color"])))
+            LabelStart.setTextAlignment(Qt.AlignCenter)
+            LabelEnd = QTableWidgetItem(str(line["end_point"]))
+            LabelEnd.setFont(QtGui.QFont('Times', 14))
+            LabelEnd.setForeground(QtGui.QBrush(QtGui.QColor(*line["line_color"])))
+            LabelEnd.setTextAlignment(Qt.AlignCenter)
+            self.ui.baseline_table.setItem(index + 1, 0, Labelindex)
+            self.ui.baseline_table.setItem(index + 1, 1, LabelStart)
+            self.ui.baseline_table.setItem(index + 1, 2, LabelEnd)
 
     def update_graphic_viewer(self, image):
         showImage = QtGui.QImage(
@@ -147,6 +173,13 @@ class UiMain(QMainWindow):
         self.ui.process_message.setText(message)
     
     def grapic_view_mousePressEvent(self, e):
+        # Validate
+        if self.media_path == "":
+            self.ui.baseline_message.setText("Please open media first!")
+            return
+        if len(self.line_list) >= self.MAX_LINE:
+            self.ui.baseline_message.setText("Baseline Maximized!")
+            return
         x = e.x()
         y = e.y()
         scroll_x = self.ui.graphicsView.horizontalScrollBar().sliderPosition()
@@ -161,7 +194,14 @@ class UiMain(QMainWindow):
             self.line_list.append({"start_point":self.start_point,"end_point":self.end_point,"line_color":line_color})
             self.update_baseline()
             self.draw_flag = 0
-        
+    
+    def clear_baseline(self):
+        self.line_list = []
+        self.draw_flag = 0
+        self.update_baseline()
+        # clear table view
+        self.ui.baseline_table.clearContents()
+        return
 
 
 class WorkThread(QThread):
