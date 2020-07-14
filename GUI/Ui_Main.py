@@ -6,6 +6,7 @@ import threading
 from .Ui_VechicleGUI import Ui_MainWindow
 import cv2
 import numpy as np
+import random
 from PIL import Image
 import tensorflow as tf
 from pathlib import Path
@@ -43,8 +44,14 @@ class UiMain(QMainWindow):
         self.num_classes = 12
         self.input_size = 416
         self.is_on = False
+        self.start_point = ()
+        self.line_list = []
+        self.draw_flag = 0  # when line start flag = 0 , line end flag = 1
+
+    
+        ui.graphicsView.mousePressEvent = self.grapic_view_mousePressEvent
         ui.browse.clicked.connect(self.browse_file)
-        ui.generate.clicked.connect(self.generate_baseline)
+        # ui.generate.clicked.connect(self.generate_baseline)
         ui.start.clicked.connect(self.start_process)
         ui.pause.setEnabled(False)
         ui.pause.clicked.connect(self.pause_process)
@@ -78,39 +85,18 @@ class UiMain(QMainWindow):
                 self.frame = frame
                 break
         self.update_graphic_viewer(frame)
-        self.generate_baseline()
 
-    def generate_baseline(self):
+    def update_baseline(self):
         # Validate
         if self.media_path == "":
             self.ui.baseline_message.setText("Please open media first!")
             return
-        try:
-            self.left_position = int(self.ui.left_position.toPlainText())
-            self.left_start = int(self.ui.left_start.toPlainText())
-            self.left_end = int(self.ui.left_end.toPlainText())
-            self.right_position = int(self.ui.right_position.toPlainText())
-            self.right_start = int(self.ui.right_start.toPlainText())
-            self.right_end = int(self.ui.right_end.toPlainText())
-            self.bottom_position = int(self.ui.bottom_position.toPlainText())
-            self.bottom_start = int(self.ui.bottom_start.toPlainText())
-            self.bottom_end = int(self.ui.bottom_end.toPlainText())
-        except ValueError:
-            self.ui.baseline_message.setText(
-                "Argument Fault! Please input number!")
         image = self.frame.copy()
-        cv2.line(image,
-                 (self.left_position, self.left_start),
-                 (self.left_position, self.left_end),
-                 (0xFF, 0, 0), 5)
-        cv2.line(image,
-                 (self.right_position, self.right_start),
-                 (self.right_position, self.right_end),
-                 (0, 0xFF, 0), 5)
-        cv2.line(image,
-                 (self.bottom_start, self.bottom_position),
-                 (self.bottom_end, self.bottom_position),
-                 (0,  0, 0xFF), 5)
+        for line in self.line_list:
+            cv2.line(image,
+                 line["start_point"],
+                 line["end_point"],
+                 line["line_color"], 5)
         self.update_graphic_viewer(image)
 
     def update_graphic_viewer(self, image):
@@ -159,6 +145,23 @@ class UiMain(QMainWindow):
     
     def update_process_message(self, message):
         self.ui.process_message.setText(message)
+    
+    def grapic_view_mousePressEvent(self, e):
+        x = e.x()
+        y = e.y()
+        scroll_x = self.ui.graphicsView.horizontalScrollBar().sliderPosition()
+        scroll_y = self.ui.graphicsView.verticalScrollBar().sliderPosition()
+        point_x, point_y = x + scroll_x, y + scroll_y
+        if self.draw_flag == 0:
+            self.start_point = (point_x, point_y)
+            self.draw_flag = 1
+        elif self.draw_flag == 1:
+            self.end_point = (point_x, point_y)
+            line_color = (random.randint(0,255),random.randint(0,255),random.randint(0,255))
+            self.line_list.append({"start_point":self.start_point,"end_point":self.end_point,"line_color":line_color})
+            self.update_baseline()
+            self.draw_flag = 0
+        
 
 
 class WorkThread(QThread):

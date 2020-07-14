@@ -1,6 +1,6 @@
 import cv2
 import numpy as np
-
+import random
 # 直方图均衡
 def hisEqulColor(img):
     ycrcb = cv2.cvtColor(img, cv2.COLOR_BGR2YCR_CB)
