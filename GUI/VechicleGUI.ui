@@ -93,7 +93,7 @@ font-size:18px；</string>
       <number>10</number>
      </property>
      <property name="columnCount">
-      <number>3</number>
+      <number>4</number>
      </property>
      <attribute name="horizontalHeaderVisible">
       <bool>true</bool>
@@ -102,7 +102,7 @@ font-size:18px；</string>
       <bool>false</bool>
      </attribute>
      <attribute name="horizontalHeaderDefaultSectionSize">
-      <number>160</number>
+      <number>110</number>
      </attribute>
      <attribute name="horizontalHeaderHighlightSections">
       <bool>true</bool>
@@ -165,8 +165,16 @@ font-size:18px；</string>
        <set>AlignCenter</set>
       </property>
      </column>
+     <column>
+      <property name="text">
+       <string>Count</string>
+      </property>
+      <property name="textAlignment">
+       <set>AlignCenter</set>
+      </property>
+     </column>
     </widget>
-    <widget class="QWidget" name="">
+    <widget class="QWidget" name="layoutWidget">
      <property name="geometry">
       <rect>
        <x>0</x>

@@ -52,7 +52,7 @@ class UiMain(QMainWindow):
         self.num_classes = 12
         self.input_size = 416
         self.is_on = False
-        self.MAX_LINE=ui.baseline_table.rowCount()
+        self.LINE_LENTH=ui.baseline_table.rowCount()
         self.start_point = ()
         self.end_point = ()
         self.line_list = []
@@ -109,7 +109,7 @@ class UiMain(QMainWindow):
         # update baseline info
         # 设置一个标签
         for index, line in enumerate(self.line_list):
-            Labelindex = QTableWidgetItem(str(index))
+            Labelindex = QTableWidgetItem(str(index + 1))
             Labelindex.setFont(QtGui.QFont('Times', 14))
             Labelindex.setForeground(QtGui.QBrush(QtGui.QColor(*line["line_color"])))
             Labelindex.setTextAlignment(Qt.AlignCenter)
@@ -121,9 +121,16 @@ class UiMain(QMainWindow):
             LabelEnd.setFont(QtGui.QFont('Times', 14))
             LabelEnd.setForeground(QtGui.QBrush(QtGui.QColor(*line["line_color"])))
             LabelEnd.setTextAlignment(Qt.AlignCenter)
+            LabelCount = QTableWidgetItem(str(line["line_counter"]))
+            LabelCount.setFont(QtGui.QFont('Times', 14))
+            LabelCount.setForeground(QtGui.QBrush(QtGui.QColor(*line["line_color"])))
+            LabelCount.setTextAlignment(Qt.AlignCenter)
+            
             self.ui.baseline_table.setItem(index + 1, 0, Labelindex)
             self.ui.baseline_table.setItem(index + 1, 1, LabelStart)
             self.ui.baseline_table.setItem(index + 1, 2, LabelEnd)
+            self.ui.baseline_table.setItem(index + 1, 3, LabelCount)
+            
 
     def update_graphic_viewer(self, image):
         showImage = QtGui.QImage(
@@ -134,13 +141,21 @@ class UiMain(QMainWindow):
         self.scene.addItem(item)
         self.ui.graphicsView.setScene(self.scene)  # 将场景添加至视图
 
+    def update_baseline_count(self):
+        for index, line in enumerate(self.line_list):
+            LabelCount = QTableWidgetItem(str(line["line_counter"]))
+            LabelCount.setFont(QtGui.QFont('Times', 14))
+            LabelCount.setForeground(QtGui.QBrush(QtGui.QColor(*line["line_color"])))
+            LabelCount.setTextAlignment(Qt.AlignCenter)
+            self.ui.baseline_table.setItem(index + 1, 3, LabelCount)
+
     '''
         Control mutual Status
     '''
 
     def mutual_control(self, status: bool):
         self.ui.browse.setEnabled(status)
-        self.ui.generate.setEnabled(status)
+        self.ui.line_clear.setEnabled(status)
         self.ui.start.setEnabled(status)
         self.ui.pause.setEnabled(status)
         self.ui.realtimemode.setEnabled(status)
@@ -149,11 +164,15 @@ class UiMain(QMainWindow):
         开始进行图像处理操作
     '''
     def start_process(self):
+        if len(self.line_list) == 0:
+            self.ui.baseline_message.setText("Please Draw Base Line First!!!!")
+            return
         self.mutual_control(False)
         self.ui.pause.setEnabled(True)
         self.compute_thread = WorkThread(window=self)
         self.compute_thread.update_graphic_viewer.connect(self.update_graphic_viewer)
         self.compute_thread.update_process_message.connect(self.update_process_message)
+        self.compute_thread.update_baseline_count.connect(self.update_baseline_count)
         self.compute_thread.start()
 
 
@@ -177,7 +196,7 @@ class UiMain(QMainWindow):
         if self.media_path == "":
             self.ui.baseline_message.setText("Please open media first!")
             return
-        if len(self.line_list) >= self.MAX_LINE:
+        if len(self.line_list) >= self.LINE_LENTH:
             self.ui.baseline_message.setText("Baseline Maximized!")
             return
         x = e.x()
@@ -191,7 +210,7 @@ class UiMain(QMainWindow):
         elif self.draw_flag == 1:
             self.end_point = (point_x, point_y)
             line_color = (random.randint(0,255),random.randint(0,255),random.randint(0,255))
-            self.line_list.append({"start_point":self.start_point,"end_point":self.end_point,"line_color":line_color})
+            self.line_list.append({"start_point":self.start_point,"end_point":self.end_point,"line_color":line_color, "line_counter": 0})
             self.update_baseline()
             self.draw_flag = 0
     
@@ -207,6 +226,7 @@ class UiMain(QMainWindow):
 class WorkThread(QThread):
     update_graphic_viewer = pyqtSignal(np.ndarray)
     update_process_message = pyqtSignal(str)
+    update_baseline_count = pyqtSignal()
     def __init__(self, window, parent=None):
         super(WorkThread, self).__init__(parent)
         self.window = window
@@ -306,7 +326,7 @@ class WorkThread(QThread):
                 raise ValueError("No image!")
 
             result = draw_bbox_with_counting(frame, vid.get(1), trackers, self.window)
-
+            self.update_baseline_count.emit()
             if self.window.showVideo_flag:
                 pbar.update(1)
                 self.window.ui.processrate.setText(str(pbar))
