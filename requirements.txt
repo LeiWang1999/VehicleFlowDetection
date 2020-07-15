@@ -7,5 +7,5 @@ numpy==1.18.1
 lapsolver==1.1.0
 tensorflow_gpu==1.15.3
 Pillow==7.1.2
-PyQt5==5.15.0
+PyQt5==5.9.2
 lapsolver==1.1.0

@@ -41,7 +41,7 @@ The accuracy of detecting the VisDrone data set is relatively high right now
 
 Pretrained Yolov3 Model：[yolov3_visdrone.pb](http://leiblog.wang/static/2020-06-13/yolov3_visdrone.zip)
 
-Training Dataset：[VisDrone2018-tf-yolo.zip](http://leiblog.wang/static/2020-06-13/VisDrone2018-tf-yolo.zip)
+Training Dataset：[VisDrone2018-tf-yolo.zip](http://leiblog.wang/static/2020-06-13/VisDrone2018-tf-yolo.zip) *dont need to download this package just infer*
 
 Validation Media：[valid.mp4](http://leiblog.wang/static/2020-06-13/valid.mp4)
 
@@ -120,7 +120,8 @@ Validation Media：[valid.mp4](http://leiblog.wang/static/2020-06-13/valid.mp4)
 
 ### Explanations
 
-The environment we are running is `python >= 3.5` and `tensorflow >= 1.15.0`, run the following command on the command line to install related dependencies
+The environment we are running is `python >= 3.6` and `tensorflow >= 1.15.0`, run the following command on the command line to install related dependencies
+> Python37 is not recommended if u are using windows os, i failed to install some package in this version, but with python3.6
 
 ```bash
 pip install -r requirements.txt
