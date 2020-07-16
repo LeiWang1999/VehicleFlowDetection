@@ -350,9 +350,9 @@ font-size:18px；</string>
     <property name="geometry">
      <rect>
       <x>780</x>
-      <y>390</y>
+      <y>480</y>
       <width>501</width>
-      <height>311</height>
+      <height>221</height>
      </rect>
     </property>
     <property name="frameShape">
@@ -385,9 +385,9 @@ font-size:18px；</string>
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>40</y>
+       <y>60</y>
        <width>481</width>
-       <height>211</height>
+       <height>151</height>
       </rect>
      </property>
      <property name="styleSheet">
@@ -408,12 +408,186 @@ font-size:18px；</string>
      </property>
     </widget>
    </widget>
+   <widget class="QFrame" name="frame">
+    <property name="geometry">
+     <rect>
+      <x>780</x>
+      <y>390</y>
+      <width>501</width>
+      <height>91</height>
+     </rect>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::StyledPanel</enum>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Raised</enum>
+    </property>
+    <layout class="QGridLayout" name="gridLayout">
+     <item row="0" column="3">
+      <widget class="QCheckBox" name="bicycle">
+       <property name="styleSheet">
+        <string notr="true">color:white;
+
+font-family: 微软雅黑;
+
+font-size:18px；</string>
+       </property>
+       <property name="text">
+        <string>bicycle</string>
+       </property>
+       <property name="checked">
+        <bool>false</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="4">
+      <widget class="QCheckBox" name="car">
+       <property name="styleSheet">
+        <string notr="true">color:white;
+
+font-family: 微软雅黑;
+
+font-size:18px；</string>
+       </property>
+       <property name="text">
+        <string>car</string>
+       </property>
+       <property name="checked">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="5">
+      <widget class="QCheckBox" name="van">
+       <property name="styleSheet">
+        <string notr="true">color:white;
+
+font-family: 微软雅黑;
+
+font-size:18px；</string>
+       </property>
+       <property name="text">
+        <string>van</string>
+       </property>
+       <property name="checked">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="5">
+      <widget class="QCheckBox" name="motor">
+       <property name="styleSheet">
+        <string notr="true">color:white;
+
+font-family: 微软雅黑;
+
+font-size:18px；</string>
+       </property>
+       <property name="text">
+        <string>motor</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="QCheckBox" name="pedestrian">
+       <property name="styleSheet">
+        <string notr="true">color:white;
+
+font-family: 微软雅黑;
+
+font-size:18px；</string>
+       </property>
+       <property name="text">
+        <string>pedestrian</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="4">
+      <widget class="QCheckBox" name="bus">
+       <property name="styleSheet">
+        <string notr="true">color:white;
+
+font-family: 微软雅黑;
+
+font-size:18px；</string>
+       </property>
+       <property name="text">
+        <string>bus</string>
+       </property>
+       <property name="checked">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="2">
+      <widget class="QCheckBox" name="people">
+       <property name="styleSheet">
+        <string notr="true">color:white;
+
+font-family: 微软雅黑;
+
+font-size:18px；</string>
+       </property>
+       <property name="text">
+        <string>people</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="3">
+      <widget class="QCheckBox" name="awning_tricycle">
+       <property name="styleSheet">
+        <string notr="true">color:white;
+
+font-family: 微软雅黑;
+
+font-size:18px；</string>
+       </property>
+       <property name="text">
+        <string>awning-tricycle</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="2">
+      <widget class="QCheckBox" name="tricycle">
+       <property name="styleSheet">
+        <string notr="true">color:white;
+
+font-family: 微软雅黑;
+
+font-size:18px；</string>
+       </property>
+       <property name="text">
+        <string>tricycle</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QCheckBox" name="truck">
+       <property name="styleSheet">
+        <string notr="true">color:white;
+
+font-family: 微软雅黑;
+
+font-size:18px；</string>
+       </property>
+       <property name="text">
+        <string>truck</string>
+       </property>
+       <property name="checked">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
    <zorder>label</zorder>
    <zorder>choose_video</zorder>
    <zorder>baseline_info</zorder>
    <zorder>draw_baseline</zorder>
    <zorder>control_process</zorder>
    <zorder>show_result</zorder>
+   <zorder>frame</zorder>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>

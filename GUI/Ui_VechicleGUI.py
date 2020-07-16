@@ -144,7 +144,7 @@ class Ui_MainWindow(object):
         self.process_message.setObjectName("process_message")
         self.gridLayout_2.addWidget(self.process_message, 1, 1, 1, 1)
         self.show_result = QtWidgets.QFrame(self.centralwidget)
-        self.show_result.setGeometry(QtCore.QRect(780, 390, 501, 311))
+        self.show_result.setGeometry(QtCore.QRect(780, 480, 501, 221))
         self.show_result.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.show_result.setFrameShadow(QtWidgets.QFrame.Raised)
         self.show_result.setObjectName("show_result")
@@ -157,7 +157,7 @@ class Ui_MainWindow(object):
 "font-size:18px；")
         self.label_19.setObjectName("label_19")
         self.label_6 = QtWidgets.QLabel(self.show_result)
-        self.label_6.setGeometry(QtCore.QRect(10, 40, 481, 211))
+        self.label_6.setGeometry(QtCore.QRect(10, 60, 481, 151))
         self.label_6.setStyleSheet("color:white;\n"
 "\n"
 "font-family: 微软雅黑;\n"
@@ -166,12 +166,105 @@ class Ui_MainWindow(object):
         self.label_6.setScaledContents(False)
         self.label_6.setWordWrap(True)
         self.label_6.setObjectName("label_6")
+        self.frame = QtWidgets.QFrame(self.centralwidget)
+        self.frame.setGeometry(QtCore.QRect(780, 390, 501, 91))
+        self.frame.setFrameShape(QtWidgets.QFrame.StyledPanel)
+        self.frame.setFrameShadow(QtWidgets.QFrame.Raised)
+        self.frame.setObjectName("frame")
+        self.gridLayout = QtWidgets.QGridLayout(self.frame)
+        self.gridLayout.setObjectName("gridLayout")
+        self.bicycle = QtWidgets.QCheckBox(self.frame)
+        self.bicycle.setStyleSheet("color:white;\n"
+"\n"
+"font-family: 微软雅黑;\n"
+"\n"
+"font-size:18px；")
+        self.bicycle.setChecked(False)
+        self.bicycle.setObjectName("bicycle")
+        self.gridLayout.addWidget(self.bicycle, 0, 3, 1, 1)
+        self.car = QtWidgets.QCheckBox(self.frame)
+        self.car.setStyleSheet("color:white;\n"
+"\n"
+"font-family: 微软雅黑;\n"
+"\n"
+"font-size:18px；")
+        self.car.setChecked(True)
+        self.car.setObjectName("car")
+        self.gridLayout.addWidget(self.car, 0, 4, 1, 1)
+        self.van = QtWidgets.QCheckBox(self.frame)
+        self.van.setStyleSheet("color:white;\n"
+"\n"
+"font-family: 微软雅黑;\n"
+"\n"
+"font-size:18px；")
+        self.van.setChecked(True)
+        self.van.setObjectName("van")
+        self.gridLayout.addWidget(self.van, 0, 5, 1, 1)
+        self.motor = QtWidgets.QCheckBox(self.frame)
+        self.motor.setStyleSheet("color:white;\n"
+"\n"
+"font-family: 微软雅黑;\n"
+"\n"
+"font-size:18px；")
+        self.motor.setObjectName("motor")
+        self.gridLayout.addWidget(self.motor, 1, 5, 1, 1)
+        self.pedestrian = QtWidgets.QCheckBox(self.frame)
+        self.pedestrian.setStyleSheet("color:white;\n"
+"\n"
+"font-family: 微软雅黑;\n"
+"\n"
+"font-size:18px；")
+        self.pedestrian.setObjectName("pedestrian")
+        self.gridLayout.addWidget(self.pedestrian, 0, 1, 1, 1)
+        self.bus = QtWidgets.QCheckBox(self.frame)
+        self.bus.setStyleSheet("color:white;\n"
+"\n"
+"font-family: 微软雅黑;\n"
+"\n"
+"font-size:18px；")
+        self.bus.setChecked(True)
+        self.bus.setObjectName("bus")
+        self.gridLayout.addWidget(self.bus, 1, 4, 1, 1)
+        self.people = QtWidgets.QCheckBox(self.frame)
+        self.people.setStyleSheet("color:white;\n"
+"\n"
+"font-family: 微软雅黑;\n"
+"\n"
+"font-size:18px；")
+        self.people.setObjectName("people")
+        self.gridLayout.addWidget(self.people, 0, 2, 1, 1)
+        self.awning_tricycle = QtWidgets.QCheckBox(self.frame)
+        self.awning_tricycle.setStyleSheet("color:white;\n"
+"\n"
+"font-family: 微软雅黑;\n"
+"\n"
+"font-size:18px；")
+        self.awning_tricycle.setObjectName("awning_tricycle")
+        self.gridLayout.addWidget(self.awning_tricycle, 1, 3, 1, 1)
+        self.tricycle = QtWidgets.QCheckBox(self.frame)
+        self.tricycle.setStyleSheet("color:white;\n"
+"\n"
+"font-family: 微软雅黑;\n"
+"\n"
+"font-size:18px；")
+        self.tricycle.setObjectName("tricycle")
+        self.gridLayout.addWidget(self.tricycle, 1, 2, 1, 1)
+        self.truck = QtWidgets.QCheckBox(self.frame)
+        self.truck.setStyleSheet("color:white;\n"
+"\n"
+"font-family: 微软雅黑;\n"
+"\n"
+"font-size:18px；")
+        self.truck.setChecked(True)
+        self.truck.setObjectName("truck")
+        self.gridLayout.addWidget(self.truck, 1, 1, 1, 1)
         self.label.raise_()
         self.choose_video.raise_()
         self.baseline_info.raise_()
         self.draw_baseline.raise_()
         self.control_process.raise_()
         self.show_result.raise_()
+        self.frame.raise_()
         MainWindow.setCentralWidget(self.centralwidget)
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
         self.statusbar.setObjectName("statusbar")
@@ -203,4 +296,14 @@ class Ui_MainWindow(object):
         self.process_message.setText(_translate("MainWindow", "Status Bar"))
         self.label_19.setText(_translate("MainWindow", "Summary"))
         self.label_6.setText(_translate("MainWindow", "<html><head/><body><p>There are two steps to counting vehicle. one is detection operation, the other is counting. Corresponding to the two media output (output.avi, counting.avi) under the ouput folder. And u can speed up the processing speed dozens of times If u have GPU.</p><p>The GitHub page is : <a href=\"https://github.com/NjtechPrinceling/VehicleFlowDetection\"><span style=\" text-decoration: underline; color:#0000ff;\">https://github.com/LeiWang1999/VehicleFlowDetection</span></a></p></body></html>"))
+        self.bicycle.setText(_translate("MainWindow", "bicycle"))
+        self.car.setText(_translate("MainWindow", "car"))
+        self.van.setText(_translate("MainWindow", "van"))
+        self.motor.setText(_translate("MainWindow", "motor"))
+        self.pedestrian.setText(_translate("MainWindow", "pedestrian"))
+        self.bus.setText(_translate("MainWindow", "bus"))
+        self.people.setText(_translate("MainWindow", "people"))
+        self.awning_tricycle.setText(_translate("MainWindow", "awning-tricycle"))
+        self.tricycle.setText(_translate("MainWindow", "tricycle"))
+        self.truck.setText(_translate("MainWindow", "truck"))
 

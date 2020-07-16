@@ -31,8 +31,23 @@ def draw_bbox_with_counting(image, image_index, trackers, window, show_box=True,
                 bbox_mess = '%s: %.2f' % (object_info['class'], object_info['max_score'])
                 cv2.putText(image, bbox_mess, (c1[0], c1[1]-2), cv2.FONT_HERSHEY_SIMPLEX,
                         0.5, (0, 0, 0), 1, lineType=cv2.LINE_AA)
-            # 判断是否是机动车
-            if object_info['class'] in ('car', 'van', 'truck', 'bus'):       
+            # 获取判断列表
+            target_object = {
+                'ignored-regions': False,
+                'pedestrian': window.ui.pedestrian.isChecked(),
+                'people':  window.ui.people.isChecked(),
+                'bicycle':  window.ui.bicycle.isChecked(),
+                'car':  window.ui.car.isChecked(),
+                'van':  window.ui.van.isChecked(),
+                'truck':  window.ui.truck.isChecked(),
+                'tricycle':  window.ui.tricycle.isChecked(),
+                'awning-tricycle':  window.ui.awning_tricycle.isChecked(),
+                'bus':  window.ui.bus.isChecked(),
+                'motor':  window.ui.motor.isChecked(),
+                'others': False}
+            target_object = list(target_object.keys())[list(target_object.values()).index(True)]
+            # 判断
+            if object_info['class'] in target_object:       
                 if object_info_index > 0:
                     bbox_last = object_info['bboxes'][object_info_index-1]
                     center_now = (((bbox[0])+(bbox[2]))/2, ((bbox[1])+(bbox[3]))/2)
