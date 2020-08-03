@@ -15,19 +15,23 @@ from .Ui_VechicleGUI import Ui_MainWindow
 import cv2
 import numpy as np
 import random
+import time
 from PIL import Image
 import tensorflow as tf
 from pathlib import Path
 import sys
+import os
 from tqdm import tqdm
 import pickle
+from openpyxl import Workbook
+from openpyxl.styles import PatternFill
 lib_dir = (Path(__file__).parent / '..' / 'lib').resolve()
 if str(lib_dir) not in sys.path:
     sys.path.insert(0, str(lib_dir))
 
 from core import utils
 import tools.save_image as save_image
-from tools.trackers_to_perframe import draw_bbox_with_counting
+from tools.trackers_to_perframe import draw_bbox_with_counting, rgbarray2str,visdrone_class_name
 from tools.iou_tracker import save_mod, track_viou_video, save_to_csv
 
 class UiMain(QMainWindow):
@@ -49,13 +53,18 @@ class UiMain(QMainWindow):
         self.counting_path = './output/counting.avi'
         self.annotation_path = './output/tracker.txt'
         self.pickle_file_path = './output/tmp.pk'
+        self.excel_path = './output/'
+        self.excel_name = ''
         self.num_classes = 12
         self.input_size = 416
+        self.video_time = 0
+        self.current_time = 0
         self.is_on = False
         self.LINE_LENTH=ui.baseline_table.rowCount()
         self.start_point = ()
         self.end_point = ()
         self.line_list = []
+        self.ws_list = []
         self.draw_flag = 0  # when line start flag = 0 , line end flag = 1
 
     
@@ -66,6 +75,7 @@ class UiMain(QMainWindow):
         ui.pause.clicked.connect(self.pause_process)
         ui.realtimemode.clicked.connect(self.update_realtimemode)
         ui.line_clear.clicked.connect(self.clear_baseline)
+
 
     def browse_file(self):
         media_path, media_type = QFileDialog.getOpenFileName(
@@ -85,13 +95,18 @@ class UiMain(QMainWindow):
         # Save media info
         self.total_frame_counter = int(vid.get(cv2.CAP_PROP_FRAME_COUNT))
         self.media_fps = vid.get(cv2.CAP_PROP_FPS)
+        self.video_time = self.total_frame_counter / self.media_fps
         self.media_size = (int(vid.get(cv2.CAP_PROP_FRAME_WIDTH)),
                            int(vid.get(cv2.CAP_PROP_FRAME_HEIGHT)))
+        self.excel_name =  str(time.time()) + str(self.video_time) + '.xlsx'
+        self.excel_path = self.excel_path + self.excel_name
+        # Init Excel Workspace
+        self.wb = Workbook()
         # Sample frame for baseline
         while True:
             return_value, frame = vid.read()
             if return_value == True:
-                frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB,)
+                frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
                 self.frame = frame
                 break
         self.update_graphic_viewer(frame)
@@ -160,6 +175,23 @@ class UiMain(QMainWindow):
         self.ui.pause.setEnabled(status)
         self.ui.realtimemode.setEnabled(status)
 
+    def excel_initial(self):
+        for index, line in enumerate(self.line_list):
+            self.ws_list.append(self.wb.create_sheet(title='line_' + str(index), index=index))
+        for index, ws in enumerate(self.ws_list):
+            # init header
+            ws.cell(row=1, column=1).value = 'class'
+            ws.cell(row=1, column=2).value = 'time'
+            ws.cell(row=1, column=3).value = 'count'
+            ws.cell(row=1, column=4).value = 'density'
+            ws.cell(row=1, column=1).fill = PatternFill(fill_type='solid', fgColor=rgbarray2str(self.line_list[index]['line_color']))
+            ws.cell(row=1, column=2).fill = PatternFill(fill_type='solid', fgColor=rgbarray2str(self.line_list[index]['line_color']))
+            ws.cell(row=1, column=3).fill = PatternFill(fill_type='solid', fgColor=rgbarray2str(self.line_list[index]['line_color']))
+            ws.cell(row=1, column=4).fill = PatternFill(fill_type='solid', fgColor=rgbarray2str(self.line_list[index]['line_color']))
+            for index, class_name in enumerate(visdrone_class_name):
+                ws.cell(row=index + 2, column=1).value = class_name
+                                
+
     '''
         开始进行图像处理操作
     '''
@@ -167,6 +199,8 @@ class UiMain(QMainWindow):
         if len(self.line_list) == 0:
             self.ui.baseline_message.setText("Please Draw Base Line First!!!!")
             return
+        # Init excel sheet for each line
+        self.excel_initial()
         self.mutual_control(False)
         self.ui.pause.setEnabled(True)
         self.compute_thread = WorkThread(window=self)
@@ -324,7 +358,7 @@ class WorkThread(QThread):
                 pass
             else:
                 raise ValueError("No image!")
-
+            self.window.current_time = vid.get(cv2.CAP_PROP_POS_MSEC)
             result = draw_bbox_with_counting(frame, vid.get(1), trackers, self.window)
             self.update_baseline_count.emit()
             if self.window.showVideo_flag:
@@ -350,3 +384,4 @@ class WorkThread(QThread):
         self.window.is_on = True
         self.detect_inference()
         self.vehicle_counting()
+        self.window.wb.save(self.window.excel_path)

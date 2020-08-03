@@ -1,5 +1,24 @@
 import cv2
 import pdb
+from openpyxl import Workbook
+
+
+visdrone_class_name = ['ignored-regions','pedestrian','people','bicycle','car','van','truck','tricycle','awning-tricycle','bus','motor','others']
+headers = ['class', 'time', 'count', 'density']
+rows  = [
+        {'class':'ignored-regions','time':'','count':0,'density':0},
+        {'class':'pedestrian','time':'','count':0,'density':0},
+        {'class':'people','time':'','count':0,'density':0},
+        {'class':'bicycle', 'time': '', 'count': 0, 'density': 0},
+        {'class':'car','time':'','count':0,'density':0},
+        {'class':'van','time':'','count':0,'density':0},
+        {'class':'truck','time':'','count':0,'density':0},
+        {'class':'tricycle', 'time': '', 'count': 0,  'density': 0},
+        {'class':'awning-tricycle','time':'','count':0,'density':0},
+        {'class':'bus','time':'','count':0,'density':0},
+        {'class':'motor','time':'','count':0,'density':0},
+        {'class':'others','time':'','count':0,'density':0},
+    ]
 
 bbox_color = {'ignored-regions':(0xFF,0x66,0x00),
     'pedestrian':(0xCC,0x66,0x00),
@@ -13,9 +32,6 @@ bbox_color = {'ignored-regions':(0xFF,0x66,0x00),
     'bus':(0x66,0xFF,0x00),
     'motor':(0x33,0x66,0x00),
     'others':(0x00,0xFF,0x00)}
-
-def trackers_to_perframe(trackers):
-    pass
 
 def draw_bbox_with_counting(image, image_index, trackers, window, show_box=True, show_label=True):
     line_list = window.line_list
@@ -52,7 +68,7 @@ def draw_bbox_with_counting(image, image_index, trackers, window, show_box=True,
                     bbox_last = object_info['bboxes'][object_info_index-1]
                     center_now = (((bbox[0])+(bbox[2]))/2, ((bbox[1])+(bbox[3]))/2)
                     center_last = (((bbox_last[0]) + (bbox_last[2])) / 2, ((bbox_last[1]) + (bbox_last[3])) / 2)
-                    for line in line_list:
+                    for index, line in enumerate(line_list):
                         start_point = line["start_point"]
                         end_point = line["end_point"]
                         line_color = line["line_color"]
@@ -60,6 +76,22 @@ def draw_bbox_with_counting(image, image_index, trackers, window, show_box=True,
                         vehicle_is_online = counting(center_now, center_last,start_point, end_point)
                         if vehicle_is_online:
                             line["line_counter"] = counter + 1
+                            # update excel output
+                            # get index and update time
+                            ws = window.ws_list[index]
+                            index = visdrone_class_name.index(object_info['class'])
+                            time = window.current_time / 1000  # 1000ms = 1s
+                            rows[index]['time'] = rows[index]['time'] + str(round(time, 2)) + 's,'
+                            rows[index]['count'] = line["line_counter"]
+                            rows[index]['density'] = line["line_counter"] / time
+                            for index, row in enumerate(rows):
+                                ws.cell(row=index + 2, column=1).value = row['class']
+                                ws.cell(row=index + 2, column=2).value = row['time']
+                                ws.cell(row=index + 2, column=3).value = row['count']
+                                ws.cell(row=index + 2, column=4).value = row['density']
+                                
+
+                            
     for line in line_list:
         cv2.line(image,
                 line["start_point"],
@@ -94,3 +126,9 @@ def counting(center_now, center_last, start_point, end_point):
                     vehicle_is_online = True
     return vehicle_is_online   
             
+def rgbarray2str(array):
+    r = array[0]
+    g = array[1]
+    b = array[2]
+    print(str(hex(r)[2:])+str(hex(g)[2:])+str(hex(b)[2:]))
+    return str(hex(r)[2:])+str(hex(g)[2:])+str(hex(b)[2:])
