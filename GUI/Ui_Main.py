@@ -45,7 +45,7 @@ class UiMain(QMainWindow):
         # Default Show Realtime Video
         self.showVideo_flag = True
         self.ui.realtimemode.setChecked(True)
-        self.writeVideo_flag = True
+        self.writeVideo_flag = False
         self.return_elements = ["input/input_data:0", "pred_sbbox/concat_2:0",
                                 "pred_mbbox/concat_2:0", "pred_lbbox/concat_2:0"]
         self.pb_file = "./models/yolov3_visdrone.pb"
@@ -98,7 +98,7 @@ class UiMain(QMainWindow):
         self.video_time = self.total_frame_counter / self.media_fps
         self.media_size = (int(vid.get(cv2.CAP_PROP_FRAME_WIDTH)),
                            int(vid.get(cv2.CAP_PROP_FRAME_HEIGHT)))
-        self.excel_name =  str(time.time()) + str(self.video_time) + '.xlsx'
+        self.excel_name =  time.strftime("%Y-%m-%d-%H:%M:%S", time.localtime()) + '.xlsx'
         self.excel_path = self.excel_path + self.excel_name
         # Init Excel Workspace
         self.wb = Workbook()
@@ -180,16 +180,19 @@ class UiMain(QMainWindow):
             self.ws_list.append(self.wb.create_sheet(title='line_' + str(index), index=index))
         for index, ws in enumerate(self.ws_list):
             # init header
-            ws.cell(row=1, column=1).value = 'class'
-            ws.cell(row=1, column=2).value = 'time'
-            ws.cell(row=1, column=3).value = 'count'
-            ws.cell(row=1, column=4).value = 'density'
+            ws.cell(row=1, column=1).value = '类别'
+            ws.cell(row=1, column=2).value = '出现时间'
+            ws.cell(row=1, column=3).value = '出现次数'
+            ws.cell(row=1, column=4).value = '车流量'
             ws.cell(row=1, column=1).fill = PatternFill(fill_type='solid', fgColor=rgbarray2str(self.line_list[index]['line_color']))
             ws.cell(row=1, column=2).fill = PatternFill(fill_type='solid', fgColor=rgbarray2str(self.line_list[index]['line_color']))
             ws.cell(row=1, column=3).fill = PatternFill(fill_type='solid', fgColor=rgbarray2str(self.line_list[index]['line_color']))
             ws.cell(row=1, column=4).fill = PatternFill(fill_type='solid', fgColor=rgbarray2str(self.line_list[index]['line_color']))
             for index, class_name in enumerate(visdrone_class_name):
                 ws.cell(row=index + 2, column=1).value = class_name
+                ws.cell(row=index + 2, column=2).value = ''
+                ws.cell(row=index + 2, column=3).value = 0
+                ws.cell(row=index + 2, column=4).value = 0
                                 
 
     '''
@@ -323,7 +326,8 @@ class WorkThread(QThread):
                     pbar.update(1)
                     self.window.ui.processrate.setText(str(pbar))
         # Release everything if job is finished
-        out.release()
+        if self.window.writeVideo_flag:
+            out.release()
         pbar.close()
         # 多目标追踪
         trackers = track_viou_video(self.window.media_path ,detections , 0.5, 0.6, 0.1, 23, 16, 'MEDIANFLOW', 1.0)
@@ -371,7 +375,8 @@ class WorkThread(QThread):
             if self.window.writeVideo_flag:
                 # save a frame
                 out.write(result)
-        out.release()
+        if self.window.writeVideo_flag:
+            out.release()
         pbar.close()
         self.window.mutual_control(True)
         self.window.ui.pause.setEnabled(False)
@@ -382,6 +387,22 @@ class WorkThread(QThread):
 
     def run(self):
         self.window.is_on = True
+        # main process
         self.detect_inference()
         self.vehicle_counting()
+        # save excel
+        for index, ws in enumerate(self.window.ws_list):
+            # init header
+            count_sum = 0
+            density_sum = 0
+            for index, class_name in enumerate(visdrone_class_name):
+                count_sum += ws.cell(row=index + 2, column=3).value
+                density_sum += ws.cell(row=index + 2, column=4).value
+            
+            ws.cell(row=len(visdrone_class_name) + 2, column=1).value = '总和'
+            ws.cell(row=len(visdrone_class_name) + 2, column=3).value = count_sum
+            ws.cell(row=len(visdrone_class_name) + 2, column=4).value = density_sum
+            
+            
+        self.window.wb.remove(self.window.wb['Sheet'])
         self.window.wb.save(self.window.excel_path)

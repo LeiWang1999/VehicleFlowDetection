@@ -130,5 +130,5 @@ def rgbarray2str(array):
     r = array[0]
     g = array[1]
     b = array[2]
-    print(str(hex(r)[2:])+str(hex(g)[2:])+str(hex(b)[2:]))
-    return str(hex(r)[2:])+str(hex(g)[2:])+str(hex(b)[2:])
+    print(str(hex(r)[2:]).zfill(2)+str(hex(g)[2:]).zfill(2)+str(hex(b)[2:]).zfill(2))
+    return str(hex(r)[2:]).zfill(2)+str(hex(g)[2:]).zfill(2)+str(hex(b)[2:]).zfill(2)
