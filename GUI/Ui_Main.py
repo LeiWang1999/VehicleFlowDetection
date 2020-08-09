@@ -330,7 +330,7 @@ class WorkThread(QThread):
             out.release()
         pbar.close()
         # 多目标追踪
-        trackers = track_viou_video(self.window.media_path ,detections , 0.5, 0.6, 0.1, 23, 16, 'MEDIANFLOW', 1.0)
+        trackers = track_viou_video(self.window.media_path ,detections , 0.5, 0.6, 0.1, 23, 16, 'MEDIANFLOW', 1.0, self.window)
         # 保存 trackers
         with open(self.window.pickle_file_path, 'wb') as pk_f:
             pickle.dump(trackers, pk_f)

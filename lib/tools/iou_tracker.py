@@ -4,6 +4,7 @@ import sys
 import os
 import csv
 from tools.vis_tracker import VisTracker
+import tools.speed_prediction as speed_prediction
 import cv2
 from lapsolver import solve_dense
 from tqdm import tqdm
@@ -189,7 +190,7 @@ def associate(tracks, detections, sigma_iou):
     return track_ids, det_ids
 
 
-def track_viou_video(video_path, detections, sigma_l, sigma_h, sigma_iou, t_min, ttl, tracker_type, keep_upper_height_ratio):
+def track_viou_video(video_path, detections, sigma_l, sigma_h, sigma_iou, t_min, ttl, tracker_type, keep_upper_height_ratio, window):
     """ V-IOU Tracker.
     See "Extending IOU Based Multi-Object Tracking by Visual Information by E. Bochinski, T. Senst, T. Sikora" for
     more information.
@@ -363,8 +364,39 @@ def track_viou_video(video_path, detections, sigma_l, sigma_h, sigma_iou, t_min,
         track['class'] = max(set(track['classes']), key=track['classes'].count)
 
         del track['visual_tracker']
-
     
+    #  append speed prediction 
+    for object_id, object_info in enumerate(tracks_finished):
+        bboxes = object_info['bboxes']
+        start_frame = object_info['start_frame']
+        for index, bbox in enumerate(bboxes):
+            box_top = bbox[0]
+            box_left = bbox[1]
+            box_bottom = bbox[2]
+            box_right = bbox[3]
+            # sample 5 box value
+            # predict vehicle
+            if index < 1:
+                past_front = 0
+            else:
+                past_front = bboxes[index - 1][0]
+            current_front = bbox[0]
+            t2b_speed = speed_prediction.predict_speed(
+                past_front,
+                current_front,
+                )
+            # predict horizontal
+            if index < 1:
+                past_front = 0
+            else:
+                past_front = bboxes[index - 1][0]
+            current_front = bbox[0]
+            l2r_speed= speed_prediction.predict_speed(
+                past_front,
+                current_front,
+                )
+            speed = math.sqrt(math.pow(t2b_speed, 2) + math.pow(l2r_speed, 2))
+            tracks_finished[object_id]['bboxes'][index] = list(bbox).append(speed)
     # debug
     # print(data)
     f = open('debug.txt', 'w')
