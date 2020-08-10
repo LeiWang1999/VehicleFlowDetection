@@ -6,18 +6,18 @@ from openpyxl import Workbook
 visdrone_class_name = ['ignored-regions','pedestrian','people','bicycle','car','van','truck','tricycle','awning-tricycle','bus','motor','others']
 headers = ['class', 'time', 'count', 'density']
 rows  = [
-        {'class':'ignored-regions','time':'','count':0,'density':0},
-        {'class':'pedestrian','time':'','count':0,'density':0},
-        {'class':'people','time':'','count':0,'density':0},
-        {'class':'bicycle', 'time': '', 'count': 0, 'density': 0},
-        {'class':'car','time':'','count':0,'density':0},
-        {'class':'van','time':'','count':0,'density':0},
-        {'class':'truck','time':'','count':0,'density':0},
-        {'class':'tricycle', 'time': '', 'count': 0,  'density': 0},
-        {'class':'awning-tricycle','time':'','count':0,'density':0},
-        {'class':'bus','time':'','count':0,'density':0},
-        {'class':'motor','time':'','count':0,'density':0},
-        {'class':'others','time':'','count':0,'density':0},
+        {'class':'ignored-regions','time':'','speed':'','count':0,'density':0},
+        {'class':'pedestrian','time':'','speed':'','count':0,'density':0},
+        {'class':'people','time':'','speed':'','count':0,'density':0},
+        {'class':'bicycle', 'time': '', 'speed':'','count':0, 'density': 0},
+        {'class':'car','time':'','speed':'','count':0,'density':0},
+        {'class':'van','time':'','speed':'','count':0,'density':0},
+        {'class':'truck','time':'','speed':'','count':0,'density':0},
+        {'class':'tricycle', 'time': '', 'speed':'','count':0,  'density': 0},
+        {'class':'awning-tricycle','time':'','speed':'','count':0,'density':0},
+        {'class':'bus','time':'','speed':'','count':0,'density':0},
+        {'class':'motor','time':'','speed':'','count':0,'density':0},
+        {'class':'others','time':'','speed':'','count':0,'density':0},
     ]
 
 bbox_color = {'ignored-regions':(0xFF,0x66,0x00),
@@ -41,6 +41,7 @@ def draw_bbox_with_counting(image, image_index, trackers, window, show_box=True,
             bbox = object_info['bboxes'][object_info_index]
             c1 = (int(bbox[0]), int(bbox[1]))
             c2 = (int(bbox[2]), int(bbox[3]))
+            speed = bbox[4]
             if show_box:  
                 cv2.rectangle(image, c1, c2, bbox_color[object_info['class']], 2)
             if show_label:
@@ -81,14 +82,16 @@ def draw_bbox_with_counting(image, image_index, trackers, window, show_box=True,
                             ws = window.ws_list[index]
                             index = visdrone_class_name.index(object_info['class'])
                             time = window.current_time / 1000  # 1000ms = 1s
-                            rows[index]['time'] = rows[index]['time'] + str(round(time, 2)) + 's,'
+                            rows[index]['time'] = rows[index]['time'] + str(object_id)+ ':' + str(round(time, 2)) + 's,'
                             rows[index]['count'] = line["line_counter"]
+                            rows[index]['speed'] = rows[index]['speed'] + str(object_id)+ ':' + str(round(speed, 2)) + 'm/s'
                             rows[index]['density'] = line["line_counter"] / time
                             for index, row in enumerate(rows):
                                 ws.cell(row=index + 2, column=1).value = row['class']
                                 ws.cell(row=index + 2, column=2).value = row['time']
-                                ws.cell(row=index + 2, column=3).value = row['count']
-                                ws.cell(row=index + 2, column=4).value = row['density']
+                                ws.cell(row=index + 2, column=3).value = row['speed']
+                                ws.cell(row=index + 2, column=4).value = row['count']
+                                ws.cell(row=index + 2, column=5).value = row['density']
                                 
 
                             

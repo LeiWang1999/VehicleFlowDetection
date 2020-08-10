@@ -380,7 +380,7 @@ def track_viou_video(video_path, detections, sigma_l, sigma_h, sigma_iou, t_min,
                 past_front = 0
             else:
                 past_front = bboxes[index - 1][0]
-            current_front = bbox[0]
+            current_front = box_top
             t2b_speed = speed_prediction.predict_speed(
                 past_front,
                 current_front,
@@ -389,16 +389,17 @@ def track_viou_video(video_path, detections, sigma_l, sigma_h, sigma_iou, t_min,
             if index < 1:
                 past_front = 0
             else:
-                past_front = bboxes[index - 1][0]
-            current_front = bbox[0]
+                past_front = bboxes[index - 1][1]
+            current_front = box_left
             l2r_speed= speed_prediction.predict_speed(
                 past_front,
                 current_front,
                 )
             speed = math.sqrt(math.pow(t2b_speed, 2) + math.pow(l2r_speed, 2))
-            tracks_finished[object_id]['bboxes'][index] = list(bbox).append(speed)
-    # debug
-    # print(data)
+            bbox = list(bbox)
+            bbox.append(speed)
+            bbox = tuple(bbox)
+            tracks_finished[object_id]['bboxes'][index] = bbox
     f = open('debug.txt', 'w')
     f.write(str(tracks_finished))
     f.close()

@@ -98,7 +98,7 @@ class UiMain(QMainWindow):
         self.video_time = self.total_frame_counter / self.media_fps
         self.media_size = (int(vid.get(cv2.CAP_PROP_FRAME_WIDTH)),
                            int(vid.get(cv2.CAP_PROP_FRAME_HEIGHT)))
-        self.excel_name =  time.strftime("%Y-%m-%d-%H:%M:%S", time.localtime()) + '.xlsx'
+        self.excel_name =  time.strftime("%Y-%m-%d-%H-%M-%S", time.localtime()) + '.xlsx'
         self.excel_path = self.excel_path + self.excel_name
         # Init Excel Workspace
         self.wb = Workbook()
@@ -289,6 +289,7 @@ class WorkThread(QThread):
                 while not self.window.is_on:
                     pass
                 return_value, frame = self.window.vid.read()
+                image_index = self.window.vid.get(1)
                 if return_value != True:
                     break
                 if return_value:
@@ -300,8 +301,6 @@ class WorkThread(QThread):
                 image_data = utils.image_preporcess(
                     np.copy(frame), [self.window.input_size, self.window.input_size])
                 image_data = image_data[np.newaxis, ...]
-
-
                 pred_sbbox, pred_mbbox, pred_lbbox = sess.run(
                     [return_tensors[1], return_tensors[2], return_tensors[3]],
                     feed_dict={return_tensors[0]: image_data})
@@ -311,8 +310,6 @@ class WorkThread(QThread):
                 bboxes = utils.postprocess_boxes(pred_bbox, frame_size, self.window.input_size, 0.45)
                 bboxes = utils.nms(bboxes, 0.45, method='nms')
                 image = utils.draw_bbox(frame, bboxes)
-                # image = utils.draw_bbox(frame, bboxes, vid.get(1))
-                # 保存为 iou_tracker 格式
                 detections = save_mod(bboxes, 0.6)
                 result = np.asarray(image)
                 if self.window.writeVideo_flag:
@@ -396,12 +393,12 @@ class WorkThread(QThread):
             count_sum = 0
             density_sum = 0
             for index, class_name in enumerate(visdrone_class_name):
-                count_sum += ws.cell(row=index + 2, column=3).value
-                density_sum += ws.cell(row=index + 2, column=4).value
+                count_sum += ws.cell(row=index + 2, column=4).value
+                density_sum += ws.cell(row=index + 2, column=5).value
             
             ws.cell(row=len(visdrone_class_name) + 2, column=1).value = '总和'
-            ws.cell(row=len(visdrone_class_name) + 2, column=3).value = count_sum
-            ws.cell(row=len(visdrone_class_name) + 2, column=4).value = density_sum
+            ws.cell(row=len(visdrone_class_name) + 2, column=4).value = count_sum
+            ws.cell(row=len(visdrone_class_name) + 2, column=5).value = density_sum
             
             
         self.window.wb.remove(self.window.wb['Sheet'])
